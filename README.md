@@ -8,7 +8,7 @@ This app allows customers to rent a car from the conviencience of their laptop. 
 
 All code pertaining to this project is stored in the "CarRentalService" directory with exception to this README file, the .gitignore file, and "manage.py".
 
-All documentation including the Project plan, Use Case Diagrams, and Requirements Definition will be stored in the "docs" folder. 
+All documentation including the Project plan, Use Case Diagrams, and Requirements Definition will be stored in the "docs" folder.
 
 ## Version-control procedures
 
@@ -16,7 +16,7 @@ Each collaborator will fork and clone this repository to their own *github* acco
 
 ## Tool stack description and setup procedure
 
-Our project uses django which helps automatically organize our tool stack. This will include: an SQLLite database managed by python scripts, python for backend management, Javascript, HTML, and CSS. 
+Our project uses django which helps automatically organize our tool stack. This will include: an SQLite database managed by python scripts, python for backend management, Javascript, HTML, and CSS. 
 
 ## Build instructions
 
@@ -30,7 +30,7 @@ Our project uses django which helps automatically organize our tool stack. This 
 
 ## Unit Testing Instructions
 
-Unit testing will test aspects of the app laid out in use case diagrams. The unit tests are not completed yet, but once complete the instructions on how to use them will be stored here. Unit tests will be stored in the app directory in a file called *testing.py*. This will become accessable once created. 
+Unit testing will test aspects of the app laid out in use case diagrams. The unit tests are not completed yet, but once complete the instructions on how to use them will be stored here. Unit tests will be stored in the app directory in a file called *testing.py*. This will become accessible once created. 
 
 ## System Testing Instructions
 
@@ -39,5 +39,3 @@ Once the app is built, the system can be tested by visiting http://127.0.0.1:800
 ## Other development notes, as needed
 
 Development notes will be added as development continues.
-
-
