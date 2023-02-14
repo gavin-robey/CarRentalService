@@ -8,7 +8,7 @@ This app allows customers to rent a car from the conviencience of their laptop. 
 
 All code pertaining to this project is stored in the "CarRentalService" directory with exception to this README file, the .gitignore file, and "manage.py".
 
-All documentation including the Project plan, Use Case Diagrams, and Requirements Definition will be stored in the "docs" folder.
+All documentation including the Project plan, Use Case Diagrams, Activity diagrams, Class diagrams, Prototypes, and Requirements Definition are stored in the "docs" folder.
 
 ## Version-control procedures
 
