@@ -1,7 +1,8 @@
+import uuid
 from django.db import models
 
 class Reservation(models.Model):
-    reservationId = models.IntegerField()
+    reservationId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     carId = models.IntegerField()
     userId = models.IntegerField()
     startDate = models.DateField(auto_now_add=False, auto_now=False, blank=True)
@@ -11,5 +12,5 @@ class Reservation(models.Model):
     hasInsurance = models.BooleanField()
     isReturned = models.BooleanField()
 
-    def __str__(self):
+    def __UUID__(self):
         return self.reservationId

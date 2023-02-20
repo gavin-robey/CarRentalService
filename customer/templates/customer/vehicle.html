@@ -1,0 +1,29 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>This is the page for vehicle number {{vehicleInfo.carId}} for customer number {{customerId}}</p>
+    <p>{{vehicleInfo.make}}</p>
+    <p>{{vehicleInfo.model}}</p>
+    <p>{{vehicleInfo.images}}</p>
+    <p>${{vehicleInfo.price}}</p>
+
+    <form action="{% url 'customer:submitRental' customerId vehicleInfo.carId %}" method="post">
+        {% csrf_token %}
+        <div>
+            <input type="date" name="startDate">
+            <input type="date" name="endDate">
+            <input type="text" name="pickUpAddress">
+            <input type="checkbox" name="hasInsurance">
+            <input type="submit" value="Book Rental">
+        </div>
+    </form>
+</body>
+</html>
