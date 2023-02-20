@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rental.apps.RentalConfig',
     'users.apps.UsersConfig',
     'reservation',
+    'customer',
 ]
 
 MIDDLEWARE = [
