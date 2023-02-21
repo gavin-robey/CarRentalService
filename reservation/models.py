@@ -7,7 +7,7 @@ class Reservation(models.Model):
     userId = models.IntegerField()
     startDate = models.DateField(auto_now_add=False, auto_now=False, blank=True)
     endDate = models.DateField(auto_now_add=False, auto_now=False, blank=True)
-    pickUpAddress = models.CharField(max_length=30) #can change to actual address model later
+    pickUpAddress = models.CharField(max_length=300) #can change to actual address model later
     needsPickup = models.BooleanField()
     hasInsurance = models.BooleanField()
     isReturned = models.BooleanField()

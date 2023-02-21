@@ -1,5 +1,6 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from reservation.models import Reservation
 
 # simulates the data base of vehicles 
@@ -72,7 +73,10 @@ def submitRental(request, customer_id, vehicle_id):
     pickUpAddress = request.POST.get('pickUpAddress')
     hasInsurance = request.POST.get('hasInsurance', False)
 
-    convertToBoolean(hasInsurance)
+    if hasInsurance == 'on':
+        hasInsurance = True
+    else:
+        hasInsurance = False
 
     reservation.carId = vehicle_id
     reservation.userId = customer_id
@@ -85,23 +89,26 @@ def submitRental(request, customer_id, vehicle_id):
 
     reservation.save()
 
-    return HttpResponse("start date: " + startDate + " end date: " + endDate)
+    return HttpResponseRedirect(reverse('customer:viewRental', args=(customer_id, vehicle_id)))
 
-
+# simulates querying the database of cars
 def getVehicle(vehicle_id):
     currentVehicle = None
-
-    # simulates querying the database of cars
     for vehicle in vehicleInfo:
         if vehicle["carId"] == vehicle_id:
             currentVehicle = vehicle
 
     return currentVehicle
 
-def convertToBoolean(hasInsurance):
-    if hasInsurance == 'on':
-        hasInsurance = True
-    else:
-        hasInsurance = False
+
+def viewRental(request, customer_id, vehicle_id):
+    rentals = []
+    reservations = Reservation.objects.filter(userId=customer_id).values()
+    
+    for reservation in reservations:
+        rentals.append(getVehicle(reservation.get('carId')))
+    
+    return render(request, "customer/rental.html", {"reservations" : reservations, "rentals": rentals })
+
 
 
