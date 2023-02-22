@@ -11,7 +11,6 @@ class Reservation(models.Model):
     needsPickup = models.BooleanField()
     hasInsurance = models.BooleanField()
     isReturned = models.BooleanField()
-    bookingCost = models.IntegerField()
 
     def __UUID__(self):
         return self.reservationId
