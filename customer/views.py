@@ -102,13 +102,25 @@ def getVehicle(vehicle_id):
 
 
 def viewRental(request, customer_id, vehicle_id):
+    reservationObj = Reservation.objects.filter(userId=customer_id).values()
     rentals = []
-    reservations = Reservation.objects.filter(userId=customer_id).values()
-    
-    for reservation in reservations:
+    reservations = []
+
+    for reservation in reservationObj:
+        # This will be useful to calculate if a rental is booked or not
+        # d1 = reservation.get('startDate')
+        # d2 = reservation.get('endDate')
+
+        # days = (d2 - d1).days
+        # print(days)
+
         rentals.append(getVehicle(reservation.get('carId')))
+        reservations.append(reservation)
+
+    resDetails = zip(rentals, reservations)
+
     
-    return render(request, "customer/rental.html", {"reservations" : reservations, "rentals": rentals })
+    return render(request, "customer/rental.html", {"resDetails" : resDetails })
 
 
 

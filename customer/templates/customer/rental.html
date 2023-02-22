@@ -8,7 +8,15 @@
 </head>
 <body>
     <h1>Your Rentals</h1>
-    <p>{{reservations}}</p>
-    <p>{{rentals}}</p>
+        {% for rental, reservation in resDetails %}
+            <div style="background-color: lightgray; margin: 20px;">
+                <p>{{rental.make}}</p>
+                <p>{{rental.model}}</p>
+                <p>{{rental.images}}</p>
+                <p>${{rental.price}} per day</p>
+                <h2>Your booking dates: {{reservation.startDate}}-{{reservation.endDate}}</h2>
+                <p>Total Cost: (calculate later)</p>
+            </div>
+        {% endfor %}
 </body>
 </html>

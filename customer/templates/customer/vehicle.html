@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,23 +5,58 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    
 </head>
 <body>
     <p>This is the page for vehicle number {{vehicleInfo.carId}} for customer number {{customerId}}</p>
     <p>{{vehicleInfo.make}}</p>
     <p>{{vehicleInfo.model}}</p>
     <p>{{vehicleInfo.images}}</p>
-    <p>${{vehicleInfo.price}}</p>
+    <p>${{vehicleInfo.price}} per day</p>
+
+
+    <p>Total Days: <span id="numdays">0</span></p>
+    <p>Total Cost: $<span id="totalCost">0</span></p>
 
     <form action="{% url 'customer:submitRental' customerId vehicleInfo.carId %}" method="post">
         {% csrf_token %}
         <div>
-            <input type="date" name="startDate">
-            <input type="date" name="endDate">
+            <input type="date" name="startDate" id="startDate" onchange="cal()" min="">
+            <input type="date" name="endDate" id="endDate" onchange="cal()" min="">
             <input type="text" name="pickUpAddress">
             <input type="checkbox" name="hasInsurance">
             <input type="submit" value="Book Rental">
         </div>
     </form>
+    <script type="text/javascript">
+        var date = new Date()
+
+        function GetDays(){
+            var dropdt = new Date(document.getElementById("endDate").value);
+            var pickdt = new Date(document.getElementById("startDate").value);
+            return parseInt((dropdt - pickdt) / (24 * 3600 * 1000));
+        }
+
+        function cal(){
+            if(document.getElementById("endDate")){
+                document.getElementById("totalCost").textContent=GetDays() * "{{vehicleInfo.price}}";
+                document.getElementById("numdays").textContent=GetDays();
+            }  
+        }
+
+        function getDate(){
+            var day = date.getDate();
+            var month = date.getMonth()+1
+
+            if(day < 10) day = "0" + day; 
+            if(month < 10) month = "0" + month; 
+
+            return date.getFullYear() + "-" + month + "-" + day;
+        }
+
+        document.getElementById('startDate').min = getDate()
+        document.getElementById('endDate').min = getDate()
+    </script>
 </body>
 </html>
