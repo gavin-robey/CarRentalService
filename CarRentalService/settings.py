@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rental.apps.RentalConfig',
     'users.apps.UsersConfig',
+    'employee.apps.EmployeeConfig',
     'reservation',
     'customer',
 ]
@@ -125,6 +126,11 @@ PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 STATIC_URL = '/static/'
+
+# https://docs.djangoproject.com/en/4.1/ref/settings/#std-setting-MEDIA_URL
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
+MEDIA_URL = '/media/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
