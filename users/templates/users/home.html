@@ -1,1 +1,5 @@
-<h3>Welcome to the website home page {{request.user.username}}!</h3>
+<h3>Welcome to the website home page {{request.user.first_name}}!</h3>
+
+<p>Role: {{request.user.profile.role}}</p>
+<p>Money Balance: {{request.user.profile.moneyBalance}}</p>
+<p>Hours Worked: {{request.user.profile.hoursWorked}}</p>
