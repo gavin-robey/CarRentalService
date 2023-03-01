@@ -8,3 +8,4 @@ __pycache__
 *.bkp
 *.dtmp
 db.sqlite3
+*.kate-swp
