@@ -6,6 +6,8 @@ from users import views as user_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # in order to go to customer page, pass in customer id to url
+    path('customer/<int:customer_id>/', include('customer.urls')), 
     path('rental/', include('rental.urls')),
     path('', user_views.home, name='home'),
     path('register/', user_views.register, name='register'),
