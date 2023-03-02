@@ -6,6 +6,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from .forms import UserRegistrationForm
 
+# Now redirects to the customer page with the id as the url payload
 def home(request):
     return HttpResponseRedirect(reverse('customer:landingPage', args=(request.user.profile.id,)))
 

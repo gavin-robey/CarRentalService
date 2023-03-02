@@ -57,6 +57,8 @@ def vehiclePage(request, customer_id, vehicle_id):
     return render(request, "customer/vehicle.html", { "id": customer_id, "vehicleInfo" : vehicle})
 
 
+# Updates reservation object in the database with customer data
+# Subtracts total cost from the customer balance
 def submitRental(request, customer_id, vehicle_id):
     reservation = Reservation()
     customer = Profile.objects.get(id=customer_id)
@@ -87,6 +89,7 @@ def submitRental(request, customer_id, vehicle_id):
     customer.save()
 
     return HttpResponseRedirect(reverse('customer:viewRental', args=(customer_id, vehicle_id)))
+
 
 # simulates querying the database of cars
 def getVehicle(vehicle_id):
@@ -122,7 +125,8 @@ def viewRental(request, customer_id, vehicle_id):
 
 
 
-
+# accesses the customer profile via the customer id and updates the moneyBalance field
+# Redirects back to the vehicle page after the balance has been updated in the database
 def addBalance(request, customer_id, vehicle_id):
     customer = Profile.objects.get(id=customer_id)
 
