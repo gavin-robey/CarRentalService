@@ -10,7 +10,5 @@ class Vehicle(models.Model):
   vehiclePrice = models.IntegerField()
   vehicleIsRetired = models.BooleanField(default=False)
   
-
-  
   def __str__(self):
     return str(self.vehicleYear) + " " + str(self.vehicleMake) + " " + str(self.vehicleModel)
