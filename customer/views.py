@@ -2,6 +2,8 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from reservation.models import Reservation
+from users.models import Profile
+from django.contrib.auth.models import User
 
 # simulates the data base of vehicles 
 vehicleInfo = [
@@ -47,31 +49,23 @@ vehicleInfo = [
 ]
 
 def landingPage(request, customer_id):
-    # simulates customer information for given customer
-    customerInfo = {
-        "userId": customer_id,
-        "email": "exampleEmail@gmail.com",
-        "password": "helloworld",
-        "moneyBalance": 124,
-        "role": "customer",
-        "hoursWorked": 0,
-    }
-
-    return render(request, "customer/index.html", { "customerInfo": customerInfo, "vehicleInfo": vehicleInfo})
+    return render(request, "customer/index.html", {"vehicleInfo": vehicleInfo})
 
 
 def vehiclePage(request, customer_id, vehicle_id):
     vehicle = getVehicle(vehicle_id)
-    return render(request, "customer/vehicle.html", { "customerId": customer_id, "vehicleInfo" : vehicle})
+    return render(request, "customer/vehicle.html", { "id": customer_id, "vehicleInfo" : vehicle})
 
 
 def submitRental(request, customer_id, vehicle_id):
     reservation = Reservation()
+    customer = Profile.objects.get(id=customer_id)
 
     startDate = request.POST.get('startDate')
     endDate = request.POST.get('endDate')
     pickUpAddress = request.POST.get('pickUpAddress')
     hasInsurance = request.POST.get('hasInsurance', False)
+    totalCost = request.POST.get('totalCost')
 
     if hasInsurance == 'on':
         hasInsurance = True
@@ -87,7 +81,10 @@ def submitRental(request, customer_id, vehicle_id):
     reservation.hasInsurance = hasInsurance
     reservation.isReturned = False
 
+    customer.moneyBalance -= int(totalCost)
+
     reservation.save()
+    customer.save()
 
     return HttpResponseRedirect(reverse('customer:viewRental', args=(customer_id, vehicle_id)))
 
@@ -106,6 +103,8 @@ def viewRental(request, customer_id, vehicle_id):
     rentals = []
     reservations = []
 
+    customer = Profile.objects.get(id=customer_id)
+
     for reservation in reservationObj:
         # This will be useful to calculate if a rental is booked or not
         # d1 = reservation.get('startDate')
@@ -117,10 +116,25 @@ def viewRental(request, customer_id, vehicle_id):
         rentals.append(getVehicle(reservation.get('carId')))
         reservations.append(reservation)
 
+    # zip arrays so that both data sets can be displayed at the same time in the template
     resDetails = zip(rentals, reservations)
+    return render(request, "customer/rental.html", {"resDetails" : resDetails, "balance": customer.moneyBalance })
 
-    
-    return render(request, "customer/rental.html", {"resDetails" : resDetails })
+
+
+
+def addBalance(request, customer_id, vehicle_id):
+    customer = Profile.objects.get(id=customer_id)
+
+    add = request.POST.get('add')
+    addedBalance = customer.moneyBalance + int(add)
+    customer.moneyBalance = addedBalance
+
+    customer.save()
+
+    return HttpResponseRedirect(reverse('customer:vehiclePage', args=(customer_id, vehicle_id)))
+
+
 
 
 

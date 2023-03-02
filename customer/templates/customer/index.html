@@ -7,8 +7,12 @@
     <title>{{id}}</title>
 </head>
 <body>
-    <p>Customer id: {{customerInfo.userId}}</p>
-    <p>Your Balance: {{customerInfo.moneyBalance}}</p>
+    <p>Username: {{request.user}}</p>
+    <p>Customer id: {{request.user.profile.id}}</p>
+    <p>Your Balance: ${{request.user.profile.moneyBalance}}</p>
+    <p>Your email: {{request.user.email}}</p>
+    <p>Your role: {{request.user.profile.role}}</p>
+    <p>Your hours worked: {{request.user.profile.hoursWorked}}</p>
 
     {% for vehicle in vehicleInfo %}
         <div style="background-color: lightgray;">
@@ -17,12 +21,9 @@
             <p>{{vehicle.model}}</p>
             <p>{{vehicle.images}}</p>
             <p>${{vehicle.price}}</p>
-            <a href="{% url 'customer:vehiclePage' customerInfo.userId vehicle.carId %}">Book Now</a>
+            <a href="{% url 'customer:vehiclePage' request.user.profile.id vehicle.carId %}">Book Now</a>
         </div>
     {% endfor %}    
 </body>
 </html>
 
-
-
-\
