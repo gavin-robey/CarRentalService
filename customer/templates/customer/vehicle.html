@@ -5,11 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-
-    
 </head>
 <body>
-    <p>This is the page for vehicle number {{vehicleInfo.carId}} for customer number {{customerId}}</p>
+    <p>This is the page for vehicle number {{vehicleInfo.carId}} for customer with email, {{request.user.email}}</p>
+    <p>Customer Balance: ${{request.user.profile.moneyBalance}}</p>
     <p>{{vehicleInfo.make}}</p>
     <p>{{vehicleInfo.model}}</p>
     <p>{{vehicleInfo.images}}</p>
@@ -19,7 +18,7 @@
     <p>Total Days: <span id="numdays">0</span></p>
     <p>Total Cost: $<span id="totalCost">0</span></p>
 
-    <form action="{% url 'customer:submitRental' customerId vehicleInfo.carId %}" method="post">
+    <form action="{% url 'customer:submitRental' id vehicleInfo.carId %}" method="post">
         {% csrf_token %}
         <div>
             <input type="date" name="startDate" id="startDate" onchange="cal()" min="">
@@ -27,8 +26,17 @@
             <input type="text" name="pickUpAddress">
             <input type="checkbox" name="hasInsurance">
             <input type="submit" value="Book Rental">
+            <input type="number" name="totalCost" onchange="cal()" id="totalCostField" style="visibility: hidden;">
         </div>
     </form>
+
+    <form action="{% url 'customer:addBalance' id vehicleInfo.carId %}" method="post">
+        {% csrf_token %}
+        <input type="number" name="add">
+        <input type="submit" value="add balance">
+    </form>
+
+    
     <script type="text/javascript">
         var date = new Date()
 
@@ -42,6 +50,7 @@
             if(document.getElementById("endDate")){
                 document.getElementById("totalCost").textContent=GetDays() * "{{vehicleInfo.price}}";
                 document.getElementById("numdays").textContent=GetDays();
+                document.getElementById("totalCostField").value=GetDays() * "{{vehicleInfo.price}}"
             }  
         }
 
