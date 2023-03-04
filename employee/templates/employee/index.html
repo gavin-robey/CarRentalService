@@ -3,14 +3,18 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Template</title>
-    <link rel="stylesheet" href="/style/style.css">
-    <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
-    -->
+    <title>Employee</title>
+    <link rel="stylesheet" href="{% static 'temp_style.css' %}"/>
   </head>
   <body>
-  <h1>All Vehicles</h1>
+  <h1>Employee Tools</h1>
+  <h2>My Details</h2>
+    <p>Hours Worked: {{request.user.profile.hoursWorked}}</p>
+
+  <h2>Add Vehicle</h2>
+    <a href="/employee/addvehicle">Go to form</a>
+  
+  <h2>All Vehicles</h2>
     {% if vehicles %}
       <ul>
       {% for vehicle in vehicles %}
