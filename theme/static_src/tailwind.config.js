@@ -42,7 +42,28 @@ module.exports = {
         // '../../**/*.py'
     ],
     theme: {
-        extend: {},
+        screens: {
+            'sm': '768px',
+            'md': '1024px',
+            'lg': '1280px',
+            'xl': '1280px',
+            '2xl': '1536px',
+        },
+        extend: {
+            colors: {
+                primary: "#2A2D3E",
+                secondary: "#212332",
+                purple: {
+                    900: "#605BFE",
+                },
+                orange: {
+                    900: "#FF8F6B",
+                },
+                white:{
+                    900: "#C6C6CA",
+                }
+            }
+        },
     },
     plugins: [
         /**

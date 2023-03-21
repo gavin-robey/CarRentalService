@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 
 TAILWIND_APP_NAME = 'theme'
 
+STATIC_URL = 'static/'
+
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
