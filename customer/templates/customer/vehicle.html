@@ -1,36 +1,52 @@
 <!DOCTYPE html>
+{% load static tailwind_tags %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    {% tailwind_css %}
 </head>
 <body>
-    <p>This is the page for vehicle number {{vehicleInfo.carId}} for customer with email, {{request.user.email}}</p>
+    <p>This is the page for vehicle number {{vehicleInfo.vehicleID}} for customer with email, {{request.user.email}}</p>
     <p>Customer Balance: ${{request.user.profile.moneyBalance}}</p>
-    <p>{{vehicleInfo.make}}</p>
-    <p>{{vehicleInfo.model}}</p>
-    <p>{{vehicleInfo.images}}</p>
-    <p>${{vehicleInfo.price}} per day</p>
+    <p>{{vehicleInfo.vehicleMake}}</p>
+    <p>{{vehicleInfo.vehicleModel}}</p>
+    <img src="{{vehicleInfo.vehicleImage.url}}" width="700px" height="400px">
+    <p>${{vehicleInfo.vehiclePrice}} per day</p>
 
 
     <p>Total Days: <span id="numdays">0</span></p>
     <p>Total Cost: $<span id="totalCost">0</span></p>
 
-    <form action="{% url 'customer:submitRental' id vehicleInfo.carId %}" method="post">
+    <form action="{% url 'customer:submitRental' id vehicleInfo.vehicleID %}" method="post">
         {% csrf_token %}
         <div>
-            <input type="date" name="startDate" id="startDate" onchange="cal()" min="">
-            <input type="date" name="endDate" id="endDate" onchange="cal()" min="">
-            <input type="text" name="pickUpAddress">
+            <input type="date" name="startDate" id="startDate" onchange="cal()" min="" required>
+            <input type="date" name="endDate" id="endDate" onchange="cal()" min="" required>
+            <input type="text" name="pickUpAddress" id="pickUpAddress" onchange="cal()">
             <input type="checkbox" name="hasInsurance">
-            <input type="submit" value="Book Rental">
+            <input type="submit" value="Book Rental" id="submit">
             <input type="number" name="totalCost" onchange="cal()" id="totalCostField" style="visibility: hidden;">
+
+            <DatePicker>
+                <DatePicker.BlackoutDates>
+                    <CalendarDateRange Start="{x:Static app:CustomDateControl.FutureMinBlackoutDate}"  End="{x:Static app:CustomDateControl.FutureMaxBlackoutDate}" />
+                    <CalendarDateRange Start="{x:Static app:CustomDateControl.PastMinBlackoutDate}"  End="{x:Static app:CustomDateControl.PastMaxBlackoutDate}" />
+                </DatePicker.BlackoutDates>
+            </DatePicker>
+        
+
+            {% if reserved %}
+                {% for reservation in reserved%}
+                    <p>{{reservation.startDate}}-{{reservation.endDate}}</p>
+                {% endfor%}
+            {% endif %}
         </div>
     </form>
 
-    <form action="{% url 'customer:addBalance' id vehicleInfo.carId %}" method="post">
+    <form action="{% url 'customer:addBalance' id vehicleInfo.vehicleID %}" method="post">
         {% csrf_token %}
         <input type="number" name="add">
         <input type="submit" value="add balance">
@@ -38,7 +54,8 @@
 
     
     <script type="text/javascript">
-        var date = new Date()
+        var date = new Date();
+        document.getElementById('submit').disabled = true;
 
         function GetDays(){
             var dropdt = new Date(document.getElementById("endDate").value);
@@ -48,15 +65,50 @@
 
         function cal(){
             if(document.getElementById("endDate")){
-                document.getElementById("totalCost").textContent=GetDays() * "{{vehicleInfo.price}}";
+                document.getElementById("totalCost").textContent=GetDays() * "{{vehicleInfo.vehiclePrice}}";
                 document.getElementById("numdays").textContent=GetDays();
-                document.getElementById("totalCostField").value=GetDays() * "{{vehicleInfo.price}}"
+                document.getElementById("totalCostField").value=GetDays() * "{{vehicleInfo.vehiclePrice}}"
             }  
+
+            if(checkBalance() && checkForm()){
+                document.getElementById('submit').disabled = false;
+            }else{
+                document.getElementById('submit').disabled = true;
+            }
+            checkBalance();
         }
 
-        function getDate(){
+        function checkBalance(){
+            if("{{request.user.profile.moneyBalance}}" < parseInt(document.getElementById("totalCost").textContent)){
+                return false;
+            }else{
+                return true;
+            }
+        }
+
+        // function checkReservation(){
+        //     var givenEnd = new Date(document.getElementById("endDate").value);
+        //     var givenStart = new Date(document.getElementById("startDate").value);
+        //     var 
+        // }
+
+
+
+        function checkForm(){
+            let startDate = document.getElementById("startDate").value;
+            let endDate = document.getElementById("endDate").value;
+            let address = document.getElementById("pickUpAddress").value;
+
+            if(startDate == "" || endDate == "" | address == ""){
+                return false;
+            }else{
+                return true;
+            }
+        }
+
+        function getDate(addMonths){
             var day = date.getDate();
-            var month = date.getMonth()+1
+            var month = date.getMonth()+1 + addMonths
 
             if(day < 10) day = "0" + day; 
             if(month < 10) month = "0" + month; 
@@ -64,8 +116,11 @@
             return date.getFullYear() + "-" + month + "-" + day;
         }
 
-        document.getElementById('startDate').min = getDate()
-        document.getElementById('endDate').min = getDate()
+        document.getElementById('startDate').min = getDate(0)
+        document.getElementById('endDate').min = getDate(0)
+
+        document.getElementById('startDate').max = getDate(6)
+        document.getElementById('endDate').max = getDate(6)
     </script>
 </body>
 </html>

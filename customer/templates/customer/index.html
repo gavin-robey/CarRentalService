@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+{% load static tailwind_tags %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{id}}</title>
+    {% tailwind_css %}
 </head>
 <body>
     <p>Username: {{request.user}}</p>
@@ -16,14 +18,24 @@
 
     {% for vehicle in vehicleInfo %}
         <div style="background-color: lightgray;">
-            <p>{{vehicle.carId}}</p>
-            <p>{{vehicle.make}}</p>
-            <p>{{vehicle.model}}</p>
-            <p>{{vehicle.images}}</p>
-            <p>${{vehicle.price}}</p>
-            <a href="{% url 'customer:vehiclePage' request.user.profile.id vehicle.carId %}">Book Now</a>
+            <p>{{vehicle.vehicleID}}</p>
+            <p>{{vehicle.vehicleYear}}</p>
+            <p>{{vehicle.vehicleMake}}</p>
+            <p>{{vehicle.vehicleModel}}</p>
+            <img src="{{vehicle.vehicleImage.url}}" width="700px" height="400px">
+            <p>{{vehicle.vehicleImage}}</p>
+            <p>${{vehicle.vehiclePrice}}</p>
+            <a href="{% url 'customer:vehiclePage' request.user.profile.id vehicle.vehicleID %}">Book Now</a>
         </div>
-    {% endfor %}    
+    {% endfor %}   
+    
+    {% for reservation in reservationList %}
+        
+    {% endfor %}
+
+    <script type="text/javascript">
+        
+    </script>
 </body>
 </html>
 
