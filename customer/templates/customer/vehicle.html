@@ -8,7 +8,28 @@
     <title>Document</title>
     {% tailwind_css %}
 </head>
-<body>
+<body class="bg-secondary text-white-900">
+    <nav class="flex items-center justify-between flex-wrap bg-primary p-5">
+        <div class="flex items-center flex-shrink-0 text-white mr-6">
+            <svg class="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z"/></svg>
+            <span class="font-semibold text-xl tracking-tight">Dan's Rental</span>
+        </div>    
+        <div class="static">
+            <img src="{% static 'customer/Images/profile.png' %}" width="40" height="40" class="hover:scale-125 transition-all duration-500" onclick="display(event)"/>
+        </div>
+    </nav>
+
+    <div class="w-full h-full bg-black opacity-50 absolute" id="background" style="visibility: hidden;" onclick="remove(event)"></div>
+
+    <div class="bg-primary absolute right-5 mt-5 p-5 text-white rounded-md" id="profileMenu" style="visibility: hidden">
+        <p class="text-xl">Your Balance: <span class="float-right font-bold">${{request.user.profile.moneyBalance}}</span></p>
+        <div class="flex flex-col items-center justify-center" >
+            <button class="bg-purple-900 w-52 h-10 mt-5 hover:scale-110 transition-all rounded-md font-semibold">Add To Account</button>
+            <a class="bg-purple-900 w-52 h-10 mt-5 hover:scale-110 transition-all rounded-md flex flex-col items-center justify-center font-semibold"  href="{% url 'customer:viewRental' request.user.profile.id 0 %}">View Rentals</a>
+            <a class="bg-purple-900 w-52 h-10 mt-5 hover:scale-110 transition-all rounded-md flex flex-col items-center justify-center font-semibold" href="{% url 'login' %}">Log Out</a>
+        </div>
+    </div>
+
     <p>This is the page for vehicle number {{vehicleInfo.vehicleID}} for customer with email, {{request.user.email}}</p>
     <p>Customer Balance: ${{request.user.profile.moneyBalance}}</p>
     <p>{{vehicleInfo.vehicleMake}}</p>
@@ -86,14 +107,6 @@
             }
         }
 
-        // function checkReservation(){
-        //     var givenEnd = new Date(document.getElementById("endDate").value);
-        //     var givenStart = new Date(document.getElementById("startDate").value);
-        //     var 
-        // }
-
-
-
         function checkForm(){
             let startDate = document.getElementById("startDate").value;
             let endDate = document.getElementById("endDate").value;
@@ -121,6 +134,21 @@
 
         document.getElementById('startDate').max = getDate(6)
         document.getElementById('endDate').max = getDate(6)
+    </script>
+
+    <script type="text/javascript">
+        var profileMenu = document.getElementById('profileMenu')
+        var background = document.getElementById('background')
+
+        function display(event){
+            profileMenu.style.visibility = 'visible';
+            background.style.visibility = 'visible';
+        }
+
+        function remove(event){
+            event.currentTarget.style.visibility = "hidden";
+            profileMenu.style.visibility = "hidden";
+        }
     </script>
 </body>
 </html>
