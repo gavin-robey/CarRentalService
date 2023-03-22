@@ -1,20 +1,22 @@
 <!DOCTYPE html>
+{% load static tailwind_tags %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Rentals</title>
+    {% tailwind_css %}
 </head>
 <body>
     <h1>Your Rentals</h1>
     <h1>Your Balance: ${{balance}}</h1>
         {% for rental, reservation in resDetails %}
             <div style="background-color: lightgray; margin: 20px;">
-                <p>{{rental.make}}</p>
-                <p>{{rental.model}}</p>
-                <p>{{rental.images}}</p>
-                <p>${{rental.price}} per day</p>
+                <p>{{rental.vehicleMake}}</p>
+                <p>{{rental.vehicleModel}}</p>
+                <img src="{{rental.vehicleImage.url}}" width="700px" height="400px">
+                <p>${{rental.vehiclePrice}} per day</p>
                 <h2>Your booking dates: {{reservation.startDate}}-{{reservation.endDate}}</h2>
                 <p>Total Cost: (calculate later)</p>
             </div>
