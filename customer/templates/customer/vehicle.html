@@ -12,7 +12,7 @@
     <nav class="flex items-center justify-between flex-wrap bg-primary p-5">
         <div class="flex items-center flex-shrink-0 text-white mr-6">
             <svg class="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z"/></svg>
-            <span class="font-semibold text-xl tracking-tight">Dan's Rental</span>
+            <span class="font-semibold text-xl tracking-tight">Book Rental</span>
         </div>    
         <div class="static">
             <img src="{% static 'customer/Images/profile.png' %}" width="40" height="40" class="hover:scale-125 transition-all duration-500" onclick="display(event)"/>
@@ -30,42 +30,54 @@
         </div>
     </div>
 
-    <p>This is the page for vehicle number {{vehicleInfo.vehicleID}} for customer with email, {{request.user.email}}</p>
-    <p>Customer Balance: ${{request.user.profile.moneyBalance}}</p>
-    <p>{{vehicleInfo.vehicleMake}}</p>
-    <p>{{vehicleInfo.vehicleModel}}</p>
-    <img src="{{vehicleInfo.vehicleImage.url}}" width="700px" height="400px">
-    <p>${{vehicleInfo.vehiclePrice}} per day</p>
+    <div class="flex justify-center mt-10">
+        <div class="flex md:flex-row flex-col">
+            <div class="basis-full">
+                <img src="{{vehicleInfo.vehicleImage.url}}" class="sm:w-auto w-[26rem] sm:h-96 rounded-md">
+            </div>
+            <div class="w-full basis-1/4 flex md:flex-col flex-row justify-center md:mt-0 mt-10">
+                <img src="{{vehicleInfo.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-14 mr-4">
+                <img src="{{vehicleInfo.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-12 mr-4">
+                <img src="{{vehicleInfo.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md hover:scale-110 transition-all ">
+            </div>
+        </div>
+    </div> 
 
+    <div class="flex justify-center">
+        <div class="bg-primary md:w-[57.5rem] sm:w-[42.5rem] w-[26rem] mt-10 rounded-md">
+            <div>
+
+            </div>
+            <p class="ml-4 mt-4 text-lg font-semibold">{{vehicleInfo.vehicleYear}} <span>{{vehicleInfo.vehicleMake}}</span> <span>{{vehicleInfo.vehicleModel}}</span></p>
+            <p class="ml-4 mt-2 text-lg font-semibold"> ${{vehicleInfo.vehiclePrice}} / Day </p>
+
+            <form action="{% url 'customer:submitRental' id vehicleInfo.vehicleID %}" method="post">
+                {% csrf_token %}
+                <div>
+                    <div class="flex flex-row justify-center items-center mt-5">
+                        <input class="peer block min-h-[auto] w-1/2 ml-5 rounded border-0 bg-secondary py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]" type="date" name="startDate" id="startDate" onchange="cal()" min="" required>
+                        <p class="ml-5 mr-5 font-semibold">To</p>
+                        <input class="peer block min-h-[auto] w-1/2 mr-5 rounded border-0 bg-secondary py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]" type="date" name="endDate" id="endDate" onchange="cal()" min="" required>
+                    </div>
+                    <input type="text" name="pickUpAddress" id="pickUpAddress" onchange="cal()">
+                    <input type="checkbox" name="hasInsurance">
+                    <input type="submit" value="Book Rental" id="submit" class="bg-purple-900 w-52 h-10 mt-1 hover:scale-110 transition-all duration-500 rounded-md flex flex-col items-center justify-center float-right font-semibold mr-4">
+                    <input type="number" name="totalCost" onchange="cal()" id="totalCostField" style="visibility: hidden;">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if reserved %}
+        {% for reservation in reserved%}
+            <p>{{reservation.startDate}}-{{reservation.endDate}}</p>
+        {% endfor%}
+    {% endif %}
 
     <p>Total Days: <span id="numdays">0</span></p>
     <p>Total Cost: $<span id="totalCost">0</span></p>
 
-    <form action="{% url 'customer:submitRental' id vehicleInfo.vehicleID %}" method="post">
-        {% csrf_token %}
-        <div>
-            <input type="date" name="startDate" id="startDate" onchange="cal()" min="" required>
-            <input type="date" name="endDate" id="endDate" onchange="cal()" min="" required>
-            <input type="text" name="pickUpAddress" id="pickUpAddress" onchange="cal()">
-            <input type="checkbox" name="hasInsurance">
-            <input type="submit" value="Book Rental" id="submit">
-            <input type="number" name="totalCost" onchange="cal()" id="totalCostField" style="visibility: hidden;">
-
-            <DatePicker>
-                <DatePicker.BlackoutDates>
-                    <CalendarDateRange Start="{x:Static app:CustomDateControl.FutureMinBlackoutDate}"  End="{x:Static app:CustomDateControl.FutureMaxBlackoutDate}" />
-                    <CalendarDateRange Start="{x:Static app:CustomDateControl.PastMinBlackoutDate}"  End="{x:Static app:CustomDateControl.PastMaxBlackoutDate}" />
-                </DatePicker.BlackoutDates>
-            </DatePicker>
-        
-
-            {% if reserved %}
-                {% for reservation in reserved%}
-                    <p>{{reservation.startDate}}-{{reservation.endDate}}</p>
-                {% endfor%}
-            {% endif %}
-        </div>
-    </form>
+    
 
     <form action="{% url 'customer:addBalance' id vehicleInfo.vehicleID %}" method="post">
         {% csrf_token %}
@@ -150,5 +162,6 @@
             profileMenu.style.visibility = "hidden";
         }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
 </body>
 </html>
