@@ -45,46 +45,53 @@
 
     <div class="flex justify-center">
         <div class="bg-primary md:w-[57.5rem] sm:w-[42.5rem] w-[26rem] mt-10 rounded-md">
-            <div>
-
-            </div>
-            <p class="ml-4 mt-4 text-lg font-semibold">{{vehicleInfo.vehicleYear}} <span>{{vehicleInfo.vehicleMake}}</span> <span>{{vehicleInfo.vehicleModel}}</span></p>
-            <p class="ml-4 mt-2 text-lg font-semibold"> ${{vehicleInfo.vehiclePrice}} / Day </p>
+            <p class="ml-5 mt-4 sm:text-lg text-base"><span class="text-xl font-semibold">{{vehicleInfo.vehicleYear}} <span>{{vehicleInfo.vehicleMake}}</span> <span>{{vehicleInfo.vehicleModel}}</span></span><span class="float-right mr-5 text-sm">Selected Days <span id="numdays">0</span></span></p>
+            <p class="ml-5 mt-2 sm:text-base text-sm"> ${{vehicleInfo.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
 
             <form action="{% url 'customer:submitRental' id vehicleInfo.vehicleID %}" method="post">
                 {% csrf_token %}
                 <div>
-                    <div class="flex flex-row justify-center items-center mt-5">
-                        <input class="peer block min-h-[auto] w-1/2 ml-5 rounded border-0 bg-secondary py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]" type="date" name="startDate" id="startDate" onchange="cal()" min="" required>
-                        <p class="ml-5 mr-5 font-semibold">To</p>
-                        <input class="peer block min-h-[auto] w-1/2 mr-5 rounded border-0 bg-secondary py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]" type="date" name="endDate" id="endDate" onchange="cal()" min="" required>
+                    <div class="mt-5 ml-5">
+                        <p class="text-lg font-semibold">Select Rental Dates</p>
                     </div>
-                    <input type="text" name="pickUpAddress" id="pickUpAddress" onchange="cal()">
+                    <div class="flex flex-row justify-center items-center mt-2">
+                        <input class=" peer block min-h-[auto] w-1/2 ml-5 rounded border-0 bg-secondary py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]" type="date" name="startDate" id="startDate" onchange="cal()" min="" required>
+                        <p class="ml-5 mr-5 font-semibold">To</p>
+                        <input class=" peer block min-h-[auto] w-1/2 mr-5 rounded border-0 bg-secondary py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]" type="date" name="endDate" id="endDate" onchange="cal()" min="" required>
+                    </div>
+                    <div class="mt-5 ml-5">
+                        <p class="text-lg font-semibold">Enter Pick Up Address</p>
+                    </div>
+                    <div class="flex justify-center">
+                        <input class=" mt-2 w-full ml-5 mr-5 rounded-md border-transparent bg-secondary focus:placeholder:opacity-100" type="text" name="pickUpAddress" id="pickUpAddress" onchange="cal()">
+                    </div>
                     <input type="checkbox" name="hasInsurance">
-                    <input type="submit" value="Book Rental" id="submit" class="bg-purple-900 w-52 h-10 mt-1 hover:scale-110 transition-all duration-500 rounded-md flex flex-col items-center justify-center float-right font-semibold mr-4">
+                    <input type="submit" value="Book Rental" id="submit" class="bg-purple-900 w-52 h-10 mt-1 hover:scale-110 transition-all duration-500 rounded-md flex flex-col items-center disabled:bg-gray-900 disabled:text-gray-700 justify-center float-right font-semibold mr-4">
                     <input type="number" name="totalCost" onchange="cal()" id="totalCostField" style="visibility: hidden;">
                 </div>
             </form>
         </div>
     </div>
+    <script type="text/javascript">
+        const reserved = []
+    </script>
 
     {% if reserved %}
         {% for reservation in reserved%}
-            <p>{{reservation.startDate}}-{{reservation.endDate}}</p>
+            <script type="text/javascript">
+                reserved.push("{{reservation.startDate}}" + " - " + "{{reservation.endDate}}")
+            </script>
         {% endfor%}
     {% endif %}
 
     <p>Total Days: <span id="numdays">0</span></p>
     <p>Total Cost: $<span id="totalCost">0</span></p>
 
-    
-
     <form action="{% url 'customer:addBalance' id vehicleInfo.vehicleID %}" method="post">
         {% csrf_token %}
         <input type="number" name="add">
         <input type="submit" value="add balance">
     </form>
-
     
     <script type="text/javascript">
         var date = new Date();
