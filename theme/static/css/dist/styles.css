@@ -1103,6 +1103,10 @@ input[type="range"]::-ms-fill-lower {
   margin-top: 1.25rem;
 }
 
+.ml-10 {
+  margin-left: 2.5rem;
+}
+
 .block {
   display: block;
 }

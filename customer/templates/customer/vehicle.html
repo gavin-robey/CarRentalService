@@ -9,6 +9,8 @@
     {% tailwind_css %}
 </head>
 <body class="bg-secondary text-white-900">
+
+    <!-- Navbar with logo, page name and profile symbol -->
     <nav class="flex items-center justify-between flex-wrap bg-primary p-5">
         <div class="flex items-center flex-shrink-0 text-white mr-6">
             <svg class="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z"/></svg>
@@ -19,17 +21,18 @@
         </div>
     </nav>
 
+    <!-- Drop Down Menu and Background -->
     <div class="w-full h-full bg-black opacity-50 absolute" id="background" style="visibility: hidden;" onclick="remove(event)"></div>
-
     <div class="bg-primary absolute right-5 mt-5 p-5 text-white rounded-md" id="profileMenu" style="visibility: hidden">
         <p class="text-xl">Your Balance: <span class="float-right font-bold">${{request.user.profile.moneyBalance}}</span></p>
         <div class="flex flex-col items-center justify-center" >
-            <button class="bg-purple-900 w-52 h-10 mt-5 hover:scale-110 transition-all rounded-md font-semibold">Add To Account</button>
-            <a class="bg-purple-900 w-52 h-10 mt-5 hover:scale-110 transition-all rounded-md flex flex-col items-center justify-center font-semibold"  href="{% url 'customer:viewRental' request.user.profile.id 0 %}">View Rentals</a>
-            <a class="bg-purple-900 w-52 h-10 mt-5 hover:scale-110 transition-all rounded-md flex flex-col items-center justify-center font-semibold" href="{% url 'login' %}">Log Out</a>
+            <button class="bg-purple-900 w-52 h-10 mt-5 rounded-md font-semibold">Add To Account</button>
+            <a class="bg-purple-900 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold"  href="{% url 'customer:viewRental' request.user.profile.id 0 %}">View Rentals</a>
+            <a class="bg-purple-900 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold" href="{% url 'login' %}">Log Out</a>
         </div>
     </div>
-
+    
+    <!-- Vehicle Images Formatting and html  -->
     <div class="flex justify-center mt-10">
         <div class="flex md:flex-row flex-col">
             <div class="basis-full">
@@ -43,35 +46,48 @@
         </div>
     </div> 
 
+    <!-- Form Section -->
     <div class="flex justify-center">
         <div class="bg-primary md:w-[57.5rem] sm:w-[42.5rem] w-[26rem] mt-10 rounded-md">
-            <p class="ml-5 mt-4 sm:text-lg text-base"><span class="text-xl font-semibold">{{vehicleInfo.vehicleYear}} <span>{{vehicleInfo.vehicleMake}}</span> <span>{{vehicleInfo.vehicleModel}}</span></span><span class="float-right mr-5 text-sm">Selected Days <span id="numdays">0</span></span></p>
+            <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{vehicleInfo.vehicleYear}} <span>{{vehicleInfo.vehicleMake}}</span> <span>{{vehicleInfo.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
             <p class="ml-5 mt-2 sm:text-base text-sm"> ${{vehicleInfo.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
 
             <form action="{% url 'customer:submitRental' id vehicleInfo.vehicleID %}" method="post">
                 {% csrf_token %}
                 <div>
-                    <div class="mt-5 ml-5">
-                        <p class="text-lg font-semibold">Select Rental Dates</p>
+                    <div class="mt-10 ml-5">
+                        <p>Select Rental Dates</p>
                     </div>
                     <div class="flex flex-row justify-center items-center mt-2">
-                        <input class=" peer block min-h-[auto] w-1/2 ml-5 rounded border-0 bg-secondary py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]" type="date" name="startDate" id="startDate" onchange="cal()" min="" required>
+                        <input class=" peer block min-h-[auto] w-1/2 ml-5 rounded border-0 bg-secondary py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])] focus:ring-purple-900 focus:border-purple-900 focus:ring-1" type="date" name="startDate" id="startDate" min="" required onchange="cal()" >
                         <p class="ml-5 mr-5 font-semibold">To</p>
-                        <input class=" peer block min-h-[auto] w-1/2 mr-5 rounded border-0 bg-secondary py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]" type="date" name="endDate" id="endDate" onchange="cal()" min="" required>
+                        <input class=" peer block min-h-[auto] w-1/2 mr-5 rounded border-0 bg-secondary py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])] focus:ring-purple-900 focus:border-purple-900 focus:ring-1" type="date" name="endDate" id="endDate"  min="" required onchange="cal()">
                     </div>
-                    <div class="mt-5 ml-5">
-                        <p class="text-lg font-semibold">Enter Pick Up Address</p>
+                    <div class="mt-10 ml-5">
+                        <p>Enter Pick Up Address</p>
                     </div>
                     <div class="flex justify-center">
-                        <input class=" mt-2 w-full ml-5 mr-5 rounded-md border-transparent bg-secondary focus:placeholder:opacity-100" type="text" name="pickUpAddress" id="pickUpAddress" onchange="cal()">
+                        <input class=" mt-2 w-full ml-5 mr-5 rounded-md border-transparent bg-secondary focus:ring-purple-900 focus:border-purple-900 focus:ring-1" type="text" name="pickUpAddress" id="pickUpAddress" onchange="cal()">
                     </div>
-                    <input type="checkbox" name="hasInsurance">
-                    <input type="submit" value="Book Rental" id="submit" class="bg-purple-900 w-52 h-10 mt-1 hover:scale-110 transition-all duration-500 rounded-md flex flex-col items-center disabled:bg-gray-900 disabled:text-gray-700 justify-center float-right font-semibold mr-4">
-                    <input type="number" name="totalCost" onchange="cal()" id="totalCostField" style="visibility: hidden;">
+                    <input class="h-10" type="number" name="totalCost" onchange="cal()" id="totalCostField" style="visibility: hidden;">
+                    <div class="flex flex-row items-center ml-5">
+                        <span><p>Add Insurance For An Additional $25?</p></span>
+                        <input type="checkbox" name="hasInsurance" id="hasInsurance" class="ml-5 rounded-full" onchange="addInsurance(this)">
+                    </div>
+                    <div class="p-5 float-right">
+                        <input type="submit" value="Book Rental" id="submit" class=" bg-purple-900 w-52 h-10 hover:scale-110 transition-all duration-500 rounded-md flex flex-col items-center disabled:bg-gray-900 disabled:text-gray-700 justify-center font-semibold">
+                    </div>
                 </div>
             </form>
         </div>
     </div>
+
+    <!-- Pop Up used for all error messages-->
+    <div class="fixed top-0 bg-primary">
+        <p>Hello world</p>
+    </div>
+
+
     <script type="text/javascript">
         const reserved = []
     </script>
@@ -84,9 +100,6 @@
         {% endfor%}
     {% endif %}
 
-    <p>Total Days: <span id="numdays">0</span></p>
-    <p>Total Cost: $<span id="totalCost">0</span></p>
-
     <form action="{% url 'customer:addBalance' id vehicleInfo.vehicleID %}" method="post">
         {% csrf_token %}
         <input type="number" name="add">
@@ -95,19 +108,26 @@
     
     <script type="text/javascript">
         var date = new Date();
+        var insurance = 25;
         document.getElementById('submit').disabled = true;
 
+        // Gets the difference of days between the two date pickers
         function GetDays(){
             var dropdt = new Date(document.getElementById("endDate").value);
             var pickdt = new Date(document.getElementById("startDate").value);
             return parseInt((dropdt - pickdt) / (24 * 3600 * 1000));
         }
 
+
         function cal(){
+            verifyDate();
+            const totalCost = isNaN(GetDays() * "{{vehicleInfo.vehiclePrice}}") ? 0 : GetDays() * "{{vehicleInfo.vehiclePrice}}";
+            const totalDays = isNaN(GetDays()) ? 0 : GetDays();
+            
             if(document.getElementById("endDate")){
-                document.getElementById("totalCost").textContent=GetDays() * "{{vehicleInfo.vehiclePrice}}";
-                document.getElementById("numdays").textContent=GetDays();
-                document.getElementById("totalCostField").value=GetDays() * "{{vehicleInfo.vehiclePrice}}"
+                document.getElementById("totalCost").textContent = totalCost;
+                document.getElementById("numdays").textContent = totalDays;
+                document.getElementById("totalCostField").value = totalCost;
             }  
 
             if(checkBalance() && checkForm()){
@@ -115,7 +135,58 @@
             }else{
                 document.getElementById('submit').disabled = true;
             }
+
             checkBalance();
+            
+        }
+
+        // Adds the cost of insurance to the total cost of the rental
+        function addInsurance(checkbox) {
+            var currentBalance = document.getElementById("totalCost").textContent;
+            if (checkbox.checked) {
+                document.getElementById("totalCost").textContent = parseInt(currentBalance) + insurance;
+            } else {
+                document.getElementById("totalCost").textContent = parseInt(currentBalance) - insurance;
+            }
+        }
+
+        // Ensures the difference between the dates cannot be negative
+        function verifyDate() {
+            const startDate = new Date(document.getElementById("startDate").value);
+            const endDate = new Date(document.getElementById("endDate").value);
+            const selectedDays = (endDate - startDate) / (1000 * 60 * 60 * 24); // Calculate the difference in days
+
+            if (selectedDays < 0) {
+                // Swap the values of the two date pickers
+                const temp = startDate;
+                document.getElementById("startDate").value = endDate.toISOString().slice(0, 10);
+                document.getElementById("endDate").value = temp.toISOString().slice(0, 10);
+            }
+
+            if(isLessThanToday(startDate)){
+                const today = new Date();
+                document.getElementById("startDate").value = today.toISOString().slice(0, 10)
+                
+                console.log("The start date is invalid")
+            }
+            if(isLessThanToday(endDate)){
+                const today = new Date();
+                document.getElementById("endDate").value = today.toISOString().slice(0, 10)
+                console.log("The end date is invalid")
+            }
+        }
+
+        /**
+         * Checks if the specified date is yesterday or less.
+         * @param {Date} date - The date to check.
+         * @returns {boolean} True if the specified date is yesterday or less, false otherwise.
+         */
+        function isLessThanToday(date) {
+            const today = new Date();
+            const yesterday = new Date();
+            yesterday.setDate(today.getDate() - 1);
+
+            return date.getTime() <= yesterday.getTime();
         }
 
         function checkBalance(){
@@ -126,6 +197,7 @@
             }
         }
 
+        // Ensures 
         function checkForm(){
             let startDate = document.getElementById("startDate").value;
             let endDate = document.getElementById("endDate").value;
@@ -150,10 +222,9 @@
 
         document.getElementById('startDate').min = getDate(0)
         document.getElementById('endDate').min = getDate(0)
-
-        document.getElementById('startDate').max = getDate(6)
-        document.getElementById('endDate').max = getDate(6)
     </script>
+
+
 
     <script type="text/javascript">
         var profileMenu = document.getElementById('profileMenu')
@@ -162,13 +233,42 @@
         function display(event){
             profileMenu.style.visibility = 'visible';
             background.style.visibility = 'visible';
+            disableScroll();
         }
 
         function remove(event){
             event.currentTarget.style.visibility = "hidden";
             profileMenu.style.visibility = "hidden";
+            enableScroll();
+        }
+
+        /**
+         * Disables scrolling on the current page by preventing the default 
+         * behavior of the mouse wheel and touch events.
+         */
+        function disableScroll() {
+            document.body.style.overflow = "hidden";
+            document.addEventListener("touchmove", preventDefault, { passive: false });
+            document.addEventListener("wheel", preventDefault, { passive: false });
+        }
+
+        /**
+         * Enables scrolling on the current page by restoring the default behavior 
+         * of the mouse wheel and touch events.
+         */
+        function enableScroll() {
+            document.body.style.overflow = "auto";
+            document.removeEventListener("touchmove", preventDefault);
+            document.removeEventListener("wheel", preventDefault);
+        }
+
+        /**
+         * Prevents the default behavior of the specified event by calling the preventDefault method on the event object.
+         * @param {Event} e - The event object to prevent the default behavior of.
+         */
+        function preventDefault(e) {
+            e.preventDefault();
         }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
 </body>
 </html>
