@@ -26,9 +26,9 @@
     <div class="bg-primary absolute right-5 mt-5 p-5 text-white rounded-md" id="profileMenu" style="visibility: hidden">
         <p class="text-xl">Your Balance: <span class="float-right font-bold">${{request.user.profile.moneyBalance}}</span></p>
         <div class="flex flex-col items-center justify-center" >
-            <button class="bg-purple-900 w-52 h-10 mt-5 rounded-md font-semibold">Add To Account</button>
-            <a class="bg-purple-900 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold"  href="{% url 'customer:viewRental' request.user.profile.id 0 %}">View Rentals</a>
-            <a class="bg-purple-900 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold" href="{% url 'login' %}">Log Out</a>
+            <button class="bg-purple-900 hover:bg-purple-700 w-52 h-10 mt-5 rounded-md font-semibold" onclick="enablePaymentForm()">Add To Account</button>
+            <a class="bg-purple-900 hover:bg-purple-700 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold"  href="{% url 'customer:viewRental' request.user.profile.id 0 %}">View Rentals</a>
+            <a class="bg-purple-900 hover:bg-purple-700 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold" href="{% url 'login' %}">Log Out</a>
         </div>
     </div>
     
@@ -47,7 +47,7 @@
     </div> 
 
     <!-- Form Section -->
-    <div class="flex justify-center">
+    <div class="flex justify-center mb-10">
         <div class="bg-primary md:w-[57.5rem] sm:w-[42.5rem] w-[26rem] mt-10 rounded-md">
             <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{vehicleInfo.vehicleYear}} <span>{{vehicleInfo.vehicleMake}}</span> <span>{{vehicleInfo.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
             <p class="ml-5 mt-2 sm:text-base text-sm"> ${{vehicleInfo.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
@@ -59,15 +59,15 @@
                         <p>Select Rental Dates</p>
                     </div>
                     <div class="flex flex-row justify-center items-center mt-2">
-                        <input class=" peer block min-h-[auto] w-1/2 ml-5 rounded border-0 bg-secondary py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])] focus:ring-purple-900 focus:border-purple-900 focus:ring-1" type="date" name="startDate" id="startDate" min="" required onchange="cal()" >
+                        <input class=" peer block min-h-[auto] w-1/2 ml-5 rounded border-transparent bg-secondary border-2 focus:ring-purple-900 focus:border-purple-900 focus:ring-5 text-gray-700" type="date" name="startDate" id="startDate" min="" required onchange="cal()" >
                         <p class="ml-5 mr-5 font-semibold">To</p>
-                        <input class=" peer block min-h-[auto] w-1/2 mr-5 rounded border-0 bg-secondary py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])] focus:ring-purple-900 focus:border-purple-900 focus:ring-1" type="date" name="endDate" id="endDate"  min="" required onchange="cal()">
+                        <input class=" peer block min-h-[auto] w-1/2 mr-5 rounded border-transparent bg-secondary border-2 focus:ring-purple-900 focus:border-purple-900 focus:ring-1 text-gray-700" type="date" name="endDate" id="endDate"  min="" required onchange="cal()">
                     </div>
                     <div class="mt-10 ml-5">
                         <p>Enter Pick Up Address</p>
                     </div>
                     <div class="flex justify-center">
-                        <input class=" mt-2 w-full ml-5 mr-5 rounded-md border-transparent bg-secondary focus:ring-purple-900 focus:border-purple-900 focus:ring-1" type="text" name="pickUpAddress" id="pickUpAddress" onchange="cal()">
+                        <input class=" mt-2 w-full ml-5 mr-5 rounded-md border-transparent bg-secondary border-2 focus:ring-purple-900 focus:border-purple-900 focus:ring-1" type="text" name="pickUpAddress" id="pickUpAddress" onchange="cal()">
                     </div>
                     <input class="h-10" type="number" name="totalCost" onchange="cal()" id="totalCostField" style="visibility: hidden;">
                     <div class="flex flex-row items-center ml-5">
@@ -75,18 +75,63 @@
                         <input type="checkbox" name="hasInsurance" id="hasInsurance" class="ml-5 rounded-full" onchange="addInsurance(this)">
                     </div>
                     <div class="p-5 float-right">
-                        <input type="submit" value="Book Rental" id="submit" class=" bg-purple-900 w-52 h-10 hover:scale-110 transition-all duration-500 rounded-md flex flex-col items-center disabled:bg-gray-900 disabled:text-gray-700 justify-center font-semibold">
+                        <input type="submit" value="Book Rental" id="submit" class=" bg-purple-900 w-52 h-10 hover:bg-purple-700 rounded-md flex flex-col items-center disabled:bg-gray-900 disabled:text-gray-700 justify-center font-semibold">
                     </div>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Pop Up used for all error messages-->
-    <div class="fixed top-0 bg-primary">
-        <p>Hello world</p>
+    <!-- Pop Up used for adding money to the account-->
+    <div class="flex justify-center" style="visibility: hidden;" id="paymentForm">
+        <div class="fixed top-36 sm:w-[30rem] md:w-[50rem] w-96 bg-secondary rounded-md p-5">
+            <span class="flex items-center float-right bg-red-700 text-red-900 hover:bg-red-300 hover:text-red-500 pl-3 pr-3 pt-1 pb-1.5 rounded-full font-semibold" onclick="remove()">X</span>
+            <div class="flex justify-center">
+                <p class="font-semibold text-lg">Add To Balance</p>
+            </div>
+            <label class="relative w-full flex flex-col mt-5">
+                <span class="font-bold mb-3">Card number</span>
+                <input onchange="updateAddPaymentButton()" id="cardInput" class="focus:ring-purple-900 focus:border-purple-900 focus:ring-1 rounded-md peer pl-12 pr-2 py-2 border-2 border-transparent placeholder-gray-700 bg-primary" type="text" name="card_number" placeholder="0000 0000 0000" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute bottom-0 left-0 -mb-0.5 transform translate-x-1/2 -translate-y-1/2 text-white-900 peer-placeholder-shown:text-gray-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+            </label>
+            
+            <label class="relative flex-1 flex flex-col mt-5">
+                <span class="font-bold mb-3">Expiration date</span>
+                <input onchange="updateAddPaymentButton()" id="expirationInput" class="focus:ring-purple-900 focus:border-purple-900 focus:ring-1 rounded-md peer pl-12 pr-2 py-2 border-2 border-transparent placeholder-gray-700 bg-primary" type="text" name="expire_date" placeholder="MM/YY" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute bottom-0 left-0 -mb-0.5 transform translate-x-1/2 -translate-y-1/2 text-white-900 peer-placeholder-shown:text-gray-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </label>
+            
+            <label class="relative flex-1 flex flex-col mt-5">
+                <span class="font-bold flex items-center gap-3 mb-3">
+                    CVC/CVV
+                    <span class="relative group">
+                    <span class="hidden group-hover:flex justify-center items-center px-2 py-1 text-xs absolute -right-2 transform translate-x-full -translate-y-1/2 w-max top-1/2 bg-orange-900 rounded-md text-gray-900"> Enter The Three Numbers On The Back</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    </span>
+                </span>
+                <input onchange="updateAddPaymentButton()" id="cvvInput" class="focus:ring-purple-900 focus:border-purple-900 focus:ring-1 rounded-md peer pl-12 pr-2 py-2 border-2 border-transparent placeholder-gray-700 bg-primary" type="text" name="card_cvc" placeholder="&bull;&bull;&bull;" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute bottom-0 left-0 -mb-0.5 transform translate-x-1/2 -translate-y-1/2 text-white-900 peer-placeholder-shown:text-gray-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </label>
+            <form action="{% url 'customer:addBalance' id vehicleInfo.vehicleID %}" method="post">
+                {% csrf_token %}
+                <p class="mt-5 font-semibold">Enter Amount</p>
+                <div class="flex flex-row mt-3 items-center">
+                    <p class="mr-5">$</p>
+                    <input onchange="updateAddPaymentButton()" min="0" oninput="this.value = Math.abs(this.value)" placeholder="0" id="amountInput" type="number" name="add" class="border-2 focus:ring-purple-900 focus:border-purple-900 focus:ring-1 bg-primary rounded-md border-transparent w-full">
+                </div>
+                <input type="submit" id="addBalance" value="Add Balance" class="float-right mt-10 bg-purple-900 w-52 h-10 hover:bg-purple-700 rounded-md flex flex-col items-center disabled:bg-gray-900 disabled:text-gray-700 justify-center font-semibold">
+            </form>
+        </div>
     </div>
-
+    
 
     <script type="text/javascript">
         const reserved = []
@@ -100,16 +145,12 @@
         {% endfor%}
     {% endif %}
 
-    <form action="{% url 'customer:addBalance' id vehicleInfo.vehicleID %}" method="post">
-        {% csrf_token %}
-        <input type="number" name="add">
-        <input type="submit" value="add balance">
-    </form>
-    
+
     <script type="text/javascript">
         var date = new Date();
         var insurance = 25;
         document.getElementById('submit').disabled = true;
+        document.getElementById('addBalance').disabled = true;
 
         // Gets the difference of days between the two date pickers
         function GetDays(){
@@ -121,6 +162,7 @@
 
         function cal(){
             verifyDate();
+            // Ensures no UI elements display "NaN"
             const totalCost = isNaN(GetDays() * "{{vehicleInfo.vehiclePrice}}") ? 0 : GetDays() * "{{vehicleInfo.vehiclePrice}}";
             const totalDays = isNaN(GetDays()) ? 0 : GetDays();
             
@@ -135,9 +177,7 @@
             }else{
                 document.getElementById('submit').disabled = true;
             }
-
             checkBalance();
-            
         }
 
         // Adds the cost of insurance to the total cost of the rental
@@ -167,6 +207,7 @@
                 const today = new Date();
                 document.getElementById("startDate").value = today.toISOString().slice(0, 10)
                 
+                // Create a UI element that updates the user on this
                 console.log("The start date is invalid")
             }
             if(isLessThanToday(endDate)){
@@ -197,16 +238,44 @@
             }
         }
 
-        // Ensures 
+        function enablePaymentForm(){
+            document.getElementById("profileMenu").style.visibility = "hidden";
+            document.getElementById("paymentForm").style.visibility = "visible";
+        }
+
+        
         function checkForm(){
             let startDate = document.getElementById("startDate").value;
             let endDate = document.getElementById("endDate").value;
             let address = document.getElementById("pickUpAddress").value;
-
+            
             if(startDate == "" || endDate == "" | address == ""){
                 return false;
             }else{
                 return true;
+            }
+        }
+
+        // All forms for payment pop up must be filled in
+        function checkPayment(){
+            let cardInput = document.getElementById("cardInput").value;
+            let expirationInput = document.getElementById("expirationInput").value;
+            let cvvInput = document.getElementById("cvvInput").value;
+            let amountInput = document.getElementById("amountInput").value;
+            
+            if(cardInput == "" || cvvInput == "" || amountInput == "" || expirationInput == ""){
+                return false;
+            }else{
+                return true;
+            }
+        }
+
+        // Enables the add payment button when all conditions are met
+        function updateAddPaymentButton(){
+            if(checkPayment()){
+                document.getElementById('addBalance').disabled = false;
+            }else{
+                document.getElementById('addBalance').disabled = true;
             }
         }
 
@@ -237,8 +306,9 @@
         }
 
         function remove(event){
-            event.currentTarget.style.visibility = "hidden";
+            background.style.visibility = "hidden";
             profileMenu.style.visibility = "hidden";
+            document.getElementById("paymentForm").style.visibility = "hidden";
             enableScroll();
         }
 
