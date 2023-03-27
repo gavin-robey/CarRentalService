@@ -28,7 +28,7 @@ class VehicleForm(forms.ModelForm):
     
     vehicleImage = forms.ImageField(
         label='Image',
-        widget=forms.FileInput(attrs={'class': 'form-control-file'}),
+        # widget=forms.FileInput(attrs={'class': 'form-control-file'}),
         required=True
     )
     

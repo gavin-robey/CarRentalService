@@ -15,7 +15,7 @@ def manager(request):
 
 def updateVehicle(request, vehicle_id):
     vehicle = Vehicle.objects.get(vehicleID=vehicle_id)
-    form = VehicleForm(request.POST or None, instance=vehicle)
+    form = VehicleForm(request.POST or None, request.FILES or None, instance=vehicle)
     if form.is_valid():
         form.save()
         return redirect('/manager')
