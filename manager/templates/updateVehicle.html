@@ -4,7 +4,7 @@
   </head>
   <body>
     <h1>Create vehicle</h1>
-    <form action="" method=POST>
+    <form action="" enctype="multipart/form-data" method=POST>
         {% csrf_token %}
         {{form.as_p}}
         <br>

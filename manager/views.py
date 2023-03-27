@@ -32,3 +32,16 @@ def createVehicle(request):
 
     context = {'form': form}
     return render(request, 'createVehicle.html', context)
+
+def payEmployees(request):
+    all_users= get_user_model().objects.all()
+    for user in all_users:
+        wage = 15
+        hoursWorked = user.profile.hoursWorked
+        currentMoney = user.profile.moneyBalance
+
+        moneyToAdd = wage * hoursWorked
+        user.profile.moneyBalance = currentMoney + moneyToAdd
+        user.profile.hoursWorked = 0
+        user.profile.save()
+    return redirect('/manager')
