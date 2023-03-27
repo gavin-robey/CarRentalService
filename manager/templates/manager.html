@@ -3,6 +3,28 @@
     <title>User Information</title>
   </head>
   <body>
-    <p>Name: {{ name }}</p>
+    <h1>All Users:</h1>
+    <ul>
+        
+        
+    </ul>
+
+    <table>
+        <tr>
+          <th>Username</th>
+          <th>Money Balance</th>
+        </tr>
+
+        {% for User in allusers %}
+            <tr>
+                <td>{{ User}}</td>
+                <td>{{ User.profile.moneyBalance}}</td>
+            </tr>                        
+        {% endfor %}
+
+        
+      </table>
+    
+    
   </body>
 </html>
