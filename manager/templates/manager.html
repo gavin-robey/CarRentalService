@@ -12,19 +12,47 @@
     <table>
         <tr>
           <th>Username</th>
-          <th>Money Balance</th>
+          <th>Hours worked</th>
+          <th>Money balance</th>
         </tr>
 
         {% for User in allusers %}
             <tr>
                 <td>{{ User}}</td>
+                <td>{{ User.profile.hoursWorked}}</td>
                 <td>{{ User.profile.moneyBalance}}</td>
             </tr>                        
         {% endfor %}
 
         
       </table>
-    
+
+      <h1>All Vehicles:</h1>
+  
+
+    <table>
+        <tr>
+          <th>Vehicle</th>
+          <th>Year</th>
+          <th>Renting Price</th>    
+          <th>Is retired?</th>      
+          <th>Update</th>
+        </tr>
+
+        {% for Vehicle in allvehicles %}
+            <tr>
+                <td>{{ Vehicle.vehicleMake}} {{ Vehicle.vehicleModel}}</td>
+                <td>{{ Vehicle.vehicleYear}}</td>
+                <td> ${{ Vehicle.vehiclePrice}}</td>
+                <td> {{ Vehicle.vehicleIsRetired}}</td>              
+                <td><a href="{% url 'manager:update-vehicle' Vehicle.vehicleID %}">Click to update</a></td>
+                
+            </tr>                        
+        {% endfor %}
+        
+      </table> 
+
+      
     
   </body>
 </html>

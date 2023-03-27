@@ -5,4 +5,5 @@ import uuid
 app_name = 'manager'
 urlpatterns = [  
     path('', views.manager, name="manager"),
+    path('update_vehicle/<uuid:vehicle_id>', views.updateVehicle, name="update-vehicle"),
 ]
