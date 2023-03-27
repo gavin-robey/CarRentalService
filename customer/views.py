@@ -10,26 +10,16 @@ from datetime import date
 
 
 def landingPage(request, customer_id):
-    # Code to only display vehicles available today
-    # Don't actually think we need this feature but keeping the code just in case
-    # today = date.today()
-    # reservations = Reservation.objects.filter(startDate__lt=today, endDate__gt=today)
-    # available = []
-    
-    # for reservation in reservations:
-    #     available.append(reservation.carId)
-
-    # vehicles = Vehicle.objects.filter().exclude(pk__in=available)
     return render(request, "customer/index.html", {"vehicleInfo": Vehicle.objects.all, "reservationList":  Reservation.objects.all})
 
 
 def vehiclePage(request, customer_id, vehicle_id):
     vehicle = Vehicle.objects.get(vehicleID=vehicle_id)
     vehicleInfo = { 
-                "id": customer_id, 
-                "vehicleInfo" : vehicle,  
-                "reserved": Reservation.objects.filter(carId=vehicle_id)
-            }
+        "id": customer_id, 
+        "vehicleInfo" : vehicle,  
+        "reserved": Reservation.objects.filter(carId=vehicle_id)
+    }
     return render(request, "customer/vehicle.html", vehicleInfo)
 
 
@@ -73,19 +63,28 @@ def submitRental(request, customer_id, vehicle_id):
 
 
 def viewRental(request, customer_id, vehicle_id):
-    reservationObj = Reservation.objects.filter(userId=customer_id).values()
+    today = date.today()
+    activeReservations = Reservation.objects.filter(userId=customer_id, startDate__lte=today, endDate__gte=today).values()
+    pastReservations = Reservation.objects.filter(userId=customer_id, endDate__lt=today).values()
+    futureReservations = Reservation.objects.filter(userId=customer_id, startDate__gt=today).values()
+
+    context = {
+        "activeReservations": filterReservations(activeReservations),
+        "pastReservations": filterReservations(pastReservations),
+        "futureReservations": filterReservations(futureReservations),
+    }
+    return render(request, "customer/rental.html", context)
+
+
+def filterReservations(reservationObj):
     rentals = []
     reservations = []
-
-    customer = Profile.objects.get(id=customer_id)
-
+    
     for reservation in reservationObj:
         rentals.append(Vehicle.objects.get(vehicleID=reservation.get('carId')))
         reservations.append(reservation)
 
-    resDetails = zip(rentals, reservations)
-    return render(request, "customer/rental.html", {"resDetails" : resDetails, "balance": customer.moneyBalance })
-
+    return zip(rentals, reservations)
 
 
 # accesses the customer profile via the customer id and updates the moneyBalance field

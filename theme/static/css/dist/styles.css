@@ -1101,6 +1101,10 @@ input[type="range"]::-ms-fill-lower {
   margin: 2rem;
 }
 
+.m-5 {
+  margin: 1.25rem;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -1174,6 +1178,14 @@ input[type="range"]::-ms-fill-lower {
   margin-top: 2rem;
 }
 
+.mt-20 {
+  margin-top: 5rem;
+}
+
+.mb-5 {
+  margin-bottom: 1.25rem;
+}
+
 .block {
   display: block;
 }
@@ -1230,6 +1242,10 @@ input[type="range"]::-ms-fill-lower {
   height: 1.75rem;
 }
 
+.h-\[\] {
+  height: ;
+}
+
 .min-h-\[auto\] {
   min-height: auto;
 }
@@ -1275,6 +1291,39 @@ input[type="range"]::-ms-fill-lower {
   width: max-content;
 }
 
+.w-\[\] {
+  width: ;
+}
+
+.w-\[60rem\] {
+  width: 60rem;
+}
+
+.w-\[50rem\] {
+  width: 50rem;
+}
+
+.w-fit {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.w-\[24rem\] {
+  width: 24rem;
+}
+
+.w-\[16rem\] {
+  width: 16rem;
+}
+
+.w-\[20rem\] {
+  width: 20rem;
+}
+
+.w-\[25rem\] {
+  width: 25rem;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -1308,6 +1357,14 @@ input[type="range"]::-ms-fill-lower {
 
 .transform {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
 .flex-row {
@@ -1430,6 +1487,10 @@ input[type="range"]::-ms-fill-lower {
 
 .p-5 {
   padding: 1.25rem;
+}
+
+.p-10 {
+  padding: 2.5rem;
 }
 
 .px-2 {
@@ -1717,6 +1778,22 @@ input[type="range"]::-ms-fill-lower {
     width: 40rem;
   }
 
+  .sm\:w-\[4rem\] {
+    width: 4rem;
+  }
+
+  .sm\:w-\[45rem\] {
+    width: 45rem;
+  }
+
+  .sm\:w-\[50rem\] {
+    width: 50rem;
+  }
+
+  .sm\:w-\[46rem\] {
+    width: 46rem;
+  }
+
   .sm\:text-base {
     font-size: 1rem;
     line-height: 1.5rem;
@@ -1760,6 +1837,10 @@ input[type="range"]::-ms-fill-lower {
 
   .md\:w-\[30rem\] {
     width: 30rem;
+  }
+
+  .md\:w-\[60rem\] {
+    width: 60rem;
   }
 
   .md\:grid-cols-2 {
