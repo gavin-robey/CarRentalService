@@ -28,6 +28,9 @@
       </table>
 
       <h1>All Vehicles:</h1>
+      <button><a href="{% url 'manager:create-vehicle' %}">Create New Vehicle</a></button>
+      <br>
+      <br>
   
 
     <table>
@@ -47,7 +50,8 @@
                 <td> {{ Vehicle.vehicleIsRetired}}</td>              
                 <td><a href="{% url 'manager:update-vehicle' Vehicle.vehicleID %}">Click to update</a></td>
                 
-            </tr>                        
+            </tr>
+                                    
         {% endfor %}
         
       </table> 

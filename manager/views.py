@@ -22,3 +22,13 @@ def updateVehicle(request, vehicle_id):
 
     context = {'vehicle': vehicle, 'form': form}
     return render(request, 'updateVehicle.html', context)
+
+def createVehicle(request):
+    # vehicle = Vehicle.objects.get(vehicleID=vehicle_id)
+    form = VehicleForm(request.POST, request.FILES)
+    if form.is_valid():
+        form.save()
+        return redirect('/manager')
+
+    context = {'form': form}
+    return render(request, 'createVehicle.html', context)
