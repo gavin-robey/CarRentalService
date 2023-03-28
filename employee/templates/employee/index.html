@@ -18,7 +18,12 @@
     {% if vehicles %}
       <ul>
       {% for vehicle in vehicles %}
-          <li>{{ vehicle.vehicleYear }} {{ vehicle.vehicleMake }} {{ vehicle.vehicleModel }} <img src="{{ vehicle.vehicleImage.url }}" class="vehicle-image"></li>
+          <a href="/employee/vehicle/{{ vehicle.vehicleID }}"><li>
+            {{ vehicle.vehicleYear }} {{ vehicle.vehicleMake }} {{ vehicle.vehicleModel }} 
+            {% if vehicle.vehicleImage %}
+              <img src="{{ vehicle.vehicleImage.url }}" class="vehicle-image">
+            {% endif %} 
+            </li></a>
       {% endfor %}
       </ul>
     {% else %}

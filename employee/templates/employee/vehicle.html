@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Vehicle</title>
+    <link rel="stylesheet" href="{% static 'temp_style.css' %}"/>
+  </head>
+  <body>
+  <a href="/employee/">&lt;--Employee Home</a>
+  <h1>{{ vehicle.vehicleYear }} {{ vehicle.vehicleMake }} {{ vehicle.vehicleModel }}</h1>
+    {% if vehicle.vehicleImage %}
+      <img src="{{ vehicle.vehicleImage.url }}" class="vehicle-image">
+    {% endif %}
+  <h2>Booked Reservations</h2>
+    {% if reservations %}
+      <ul>
+      {% for reservation in reservations %}
+          <li>
+            {{ reservation.startDate.isoformat }} to {{ reservation.endDate.isoformat }} by user {{ reservation.userId }}
+            </li> 
+      {% endfor %}
+      </ul>
+    {% else %}
+        <p>No reservations have been made.</p>
+    {% endif %}
+  </body>
+</html>

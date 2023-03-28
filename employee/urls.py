@@ -7,11 +7,10 @@ from . import views
 urlpatterns = [
   path('', views.index, name='index'),
   path('addvehicle/', views.addVehicle, name='addVehicle'),
-  path('vehicleAddConfirm/', views.vehicleAddConfirm, name='vehicleAddConfirm'),
   path('addcustomer/', views.addCustomer, name='addcustomer'),
   path('searchvehicle/', views.searchVehicle, name='searchvehicle'),
   
-  path('vehicle/<int:vehicle_id>/', views.vehicleDetails, name='vehicleDetails'),
+  path('vehicle/<str:vehicle_id>/', views.vehicleDetails, name='vehicleDetails'),
 ]
 
 # https://docs.djangoproject.com/en/4.1/howto/static-files/#serving-uploaded-files-in-development

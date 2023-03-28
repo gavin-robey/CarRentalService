@@ -28,6 +28,16 @@ Our project uses django which helps automatically organize our tool stack. This 
 6. Launch Server: `$ python3 manage.py runserver`
 7. Run server by visiting: http://127.0.0.1:8000/ 
 
+## Testing data
+
+To load in testing vehicle and reservation data, run the following commands:
+
+```
+python manage.py loaddata reservations_mock.json
+python manage.py loaddata vehicles_mock.json
+```
+
+
 ## Unit Testing Instructions
 
 Unit testing will test aspects of the app laid out in use case diagrams. The unit tests are not completed yet, but once complete the instructions on how to use them will be stored here. Unit tests will be stored in the app directory in a file called *testing.py*. This will become accessible once created. 

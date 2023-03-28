@@ -1,0 +1,8 @@
+Image URLS:
+
+vehicles/dummy/gtx1.jpg, vehicles/dummy/at9z.jpg, vehicles/dummy/suz1.png, vehicles/dummy/om.jpg, vehicles/dummy/cam1.jpg, vehicles/dummy/cam2.jpg, vehicles/dummy/smart.jpg, vehicles/dummy/f150.jpg, vehicles/dummy/bus1.jpg, vehicles/dummy/semi.jpg, vehicles/dummy/fusion1.jpg, vehicles/dummy/jd.jpg, vehicles/dummy/rav4.jpg, vehicles/dummy/element.png
+
+Vehicle UUIDs:
+
+a47f1dc9-4b78-403a-b1a0-7a79a0267ec5, 8bcc5bd3-0482-4c50-82ca-4bcaf2acaf70, ab48da01-e055-45ef-9098-fd3fc08592b4, 0abcebaf-2edd-40c1-b851-1e28fd5e642a, 5ddb7a58-1d26-4837-ac85-11f09210e62e, 3af28695-9cef-40a2-9768-530159a68fff, 858a235d-68d7-4cb9-9c65-c3c56fd82434, b2686b5c-723b-45cb-886d-ca3c5ec627ed, 765e6e2f-2883-4ccf-a93f-86a299755dce, 6fa549d2-5a0f-4e34-b38d-02845f2300ba
+
