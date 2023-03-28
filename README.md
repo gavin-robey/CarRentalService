@@ -89,15 +89,48 @@ python3 manage.py runserver
 To test all unit tests in the project run the following command:
 
 ```
-python manage.py test
+python3 manage.py test
 ```
 
 To test all tests associated with the Reservation Object, run the following command:
 
 ```
-python manage.py test reservation
-
+python3 manage.py test reservation
 ```
+
+To test all tests associated with the Vehicle Object, run the following command:
+```
+python3 manage.py test employee 
+```
+
+## Unit Testing Descriptions
+
+### Reservation Model Testing
+* 'ReservationModelTest' tests whether the Reservation model can query data properly by initiializing a table full of data and querying each data column. The results of each query are verified to be correct.
+
+* 'ReservationUpdateTest' tests whether the Reservation model can update different values of each data column. It aserts that the new value is reflected in the model and that this new value is saved. 
+
+* 'ReservationDeleteTest' tests whether the Reservation model can delete an entire row of data. It asserts that the created reservation does not exist once deleted.
+
+* 'ReservationSpecificDeleteTest' tests whether the Reservation model can delete a specific piece of data. It asserts that the desired piece of data is no longer in the database. 
+
+### Vehicle Model Testing
+* 'test_vehicle_values' Tests that the values of the test Vehicle match the expected values when being queried.
+
+* 'test_vehicle_is_retired' Tests that a vehicle can be retired when the 'vehicleIsRetired' boolean is updated.
+
+* 'test_update_vehicle_year' Ensures that the vehicle year can be updated.
+
+* 'test_update_vehicle_make' Ensures that the vehicle make can be updated.
+
+* 'test_update_vehicle_model' Ensures that the vehicle model can be updated.
+
+* 'test_update_vehicle_price' Ensures that the vehicle price can be updated.
+
+* 'test_delete_vehicle' Tests whether a table in the database can be deleted.
+
+* 'test_delete_all_vehicles' Tests whether multiple tables in the database can be deleted. 
+
 
 ## System Testing Instructions
 
