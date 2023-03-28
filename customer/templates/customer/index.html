@@ -1,28 +1,99 @@
 <!DOCTYPE html>
+{% load static %}
+{% load static tailwind_tags %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{id}}</title>
+    {% tailwind_css %}
 </head>
-<body>
-    <p>Customer id: {{customerInfo.userId}}</p>
-    <p>Your Balance: {{customerInfo.moneyBalance}}</p>
-
-    {% for vehicle in vehicleInfo %}
-        <div style="background-color: lightgray;">
-            <p>{{vehicle.carId}}</p>
-            <p>{{vehicle.make}}</p>
-            <p>{{vehicle.model}}</p>
-            <p>{{vehicle.images}}</p>
-            <p>${{vehicle.price}}</p>
-            <a href="{% url 'customer:vehiclePage' customerInfo.userId vehicle.carId %}">Book Now</a>
+<body class="bg-secondary text-white-900">
+    <nav class="flex items-center justify-between flex-wrap bg-primary p-5">
+        <div class="flex items-center flex-shrink-0 text-white mr-6">
+            <svg class="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z"/></svg>
+            <span class="font-semibold text-xl tracking-tight">Dan's Rental</span>
+        </div>    
+        <div class="static">
+            <img src="{% static 'customer/Images/profile.png' %}" width="40" height="40" class="hover:scale-125 transition-all duration-500" onclick="display(event)"/>
         </div>
-    {% endfor %}    
+    </nav>
+
+    <div class="w-full h-full bg-black opacity-50 absolute" id="background" style="visibility: hidden;" onclick="remove(event)"></div>
+
+    <div class="bg-primary absolute right-5 mt-5 p-5 text-white rounded-md" id="profileMenu" style="visibility: hidden">
+        <p class="text-xl">Your Balance: <span class="float-right font-bold">${{request.user.profile.moneyBalance}}</span></p>
+        <div class="flex flex-col items-center justify-center" >
+            <button class="bg-purple-900 w-52 h-10 mt-5 rounded-md font-semibold">Add To Account</button>
+            <a class="bg-purple-900 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold"  href="{% url 'customer:viewRental' request.user.profile.id 0 %}">View Rentals</a>
+            <a class="bg-purple-900 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold" href="{% url 'login' %}">Log Out</a>
+        </div>
+    </div>
+
+    <h2 class="m-8 text-4xl font-medium leading-tight text-white-900 italic capitalize">
+        Welcome {{request.user.first_name}}!
+    </h2>
+
+    <div class="grid lg:grid-cols-3 gap-10 md:grid-cols-2 place-items-center ml-5 mr-5">
+        {% for vehicle in vehicleInfo %}
+        <div class=" w-width h-96 bg-primary rounded-md ">
+            <div class="flex flex-col items-center">
+                <img src="{{vehicle.vehicleImage.url}}" class="w-96 h-60 mt-4 rounded-md m-4">
+            </div>
+            <p class="ml-4 mt-4 text-lg font-semibold">{{vehicle.vehicleYear}} <span>{{vehicle.vehicleMake}}</span> <span>{{vehicle.vehicleModel}}</span></p>
+            <p class="ml-4 mt-2 text-lg font-semibold"> ${{vehicle.vehiclePrice}} / Day 
+                <a href="{% url 'customer:vehiclePage' request.user.profile.id vehicle.vehicleID %}" class="bg-purple-900 w-52 h-10 mt-1 hover:scale-110 transition-all duration-500 rounded-md flex flex-col items-center justify-center float-right font-semibold mr-4">Book Now</a>
+            </p>
+        </div>
+        {% endfor %} 
+    </div> 
+
+    <script type="text/javascript">
+        var profileMenu = document.getElementById('profileMenu')
+        var background = document.getElementById('background')
+
+        function display(event){
+            profileMenu.style.visibility = 'visible';
+            background.style.visibility = 'visible';
+            disableScroll();
+        }
+
+        function remove(event){
+            event.currentTarget.style.visibility = "hidden";
+            profileMenu.style.visibility = "hidden";
+            enableScroll();
+        }
+
+        /**
+         * Disables scrolling on the current page by preventing the default 
+         * behavior of the mouse wheel and touch events.
+         */
+        function disableScroll() {
+            document.body.style.overflow = "hidden";
+            document.addEventListener("touchmove", preventDefault, { passive: false });
+            document.addEventListener("wheel", preventDefault, { passive: false });
+        }
+
+        /**
+         * Enables scrolling on the current page by restoring the default behavior 
+         * of the mouse wheel and touch events.
+         */
+        function enableScroll() {
+            document.body.style.overflow = "auto";
+            document.removeEventListener("touchmove", preventDefault);
+            document.removeEventListener("wheel", preventDefault);
+        }
+
+        /**
+         * Prevents the default behavior of the specified event by calling the preventDefault method on the event object.
+         * @param {Event} e - The event object to prevent the default behavior of.
+         */
+        function preventDefault(e) {
+            e.preventDefault();
+        }
+    </script>
+
 </body>
 </html>
 
-
-
-\

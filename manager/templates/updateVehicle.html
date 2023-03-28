@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title>Create Vehicle</title>
+  </head>
+  <body>
+    <h1>Create vehicle</h1>
+    <form action="" enctype="multipart/form-data" method=POST>
+        {% csrf_token %}
+        {{form.as_p}}
+        <br>
+        <input type="submit" value="Update">
+    </form>
+
+    <p></p>
+
+  </body>
+</html>

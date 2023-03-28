@@ -1,77 +1,44 @@
-from django.shortcuts import get_object_or_404, render
+from datetime import datetime
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from reservation.models import Reservation
+from users.models import Profile
+from employee.models import Vehicle
+from django.contrib.auth.models import User
+from datetime import date
 
-# simulates the data base of vehicles 
-vehicleInfo = [
-    {
-    "carId": 1,
-    "make": "Volkswagen",
-    "model": "Golf",
-    "images": "example image", 
-    "price": 50.00,
-    "isRetired": False },
-
-    {
-    "carId": 2,
-    "make": "Toyota",
-    "model": "Camry",
-    "images": "example image", 
-    "price": 100.00,
-    "isRetired": False },
-
-    {
-    "carId": 3,
-    "make": "Chevrolet",
-    "model": "Silverado",
-    "images": "example image", 
-    "price": 150.00,
-    "isRetired": False },
-
-    {
-    "carId": 4,
-    "make": "Lamborghini",
-    "model": "Aventador",
-    "images": "example image", 
-    "price": 300.00,
-    "isRetired": False },
-
-    {
-    "carId": 5,
-    "make": "Ford",
-    "model": "Pinto",
-    "images": "example image", 
-    "price": 25.00,
-    "isRetired": False }
-]
 
 def landingPage(request, customer_id):
-    # simulates customer information for given customer
-    customerInfo = {
-        "userId": customer_id,
-        "email": "exampleEmail@gmail.com",
-        "password": "helloworld",
-        "moneyBalance": 124,
-        "role": "customer",
-        "hoursWorked": 0,
-    }
-
-    return render(request, "customer/index.html", { "customerInfo": customerInfo, "vehicleInfo": vehicleInfo})
+    return render(request, "customer/index.html", {"vehicleInfo": Vehicle.objects.all, "reservationList":  Reservation.objects.all})
 
 
 def vehiclePage(request, customer_id, vehicle_id):
-    vehicle = getVehicle(vehicle_id)
-    return render(request, "customer/vehicle.html", { "customerId": customer_id, "vehicleInfo" : vehicle})
+    vehicle = Vehicle.objects.get(vehicleID=vehicle_id)
+    vehicleInfo = { 
+        "id": customer_id, 
+        "vehicleInfo" : vehicle,  
+        "reserved": Reservation.objects.filter(carId=vehicle_id)
+    }
+    return render(request, "customer/vehicle.html", vehicleInfo)
 
 
+# Updates reservation object in the database with customer data
+# Subtracts total cost from the customer balance
 def submitRental(request, customer_id, vehicle_id):
     reservation = Reservation()
+    customer = Profile.objects.get(id=customer_id)
 
-    startDate = request.POST.get('startDate')
-    endDate = request.POST.get('endDate')
+    startDate = datetime.strptime(request.POST.get('startDate'), '%Y-%m-%d').date()
+    endDate = datetime.strptime(request.POST.get('endDate'), '%Y-%m-%d').date()
+
+    for reserved in Reservation.objects.filter(carId=vehicle_id):
+        if reserved.startDate <= startDate <= reserved.endDate or reserved.startDate <= endDate <= reserved.endDate:
+            return HttpResponseRedirect(reverse('customer:vehiclePage', args=(customer_id, vehicle_id)))
+
     pickUpAddress = request.POST.get('pickUpAddress')
     hasInsurance = request.POST.get('hasInsurance', False)
+    totalCost = request.POST.get('totalCost')
 
     if hasInsurance == 'on':
         hasInsurance = True
@@ -87,40 +54,53 @@ def submitRental(request, customer_id, vehicle_id):
     reservation.hasInsurance = hasInsurance
     reservation.isReturned = False
 
+    customer.moneyBalance -= int(totalCost)
+
     reservation.save()
+    customer.save()
 
-    return HttpResponseRedirect(reverse('customer:viewRental', args=(customer_id, vehicle_id)))
-
-# simulates querying the database of cars
-def getVehicle(vehicle_id):
-    currentVehicle = None
-    for vehicle in vehicleInfo:
-        if vehicle["carId"] == vehicle_id:
-            currentVehicle = vehicle
-
-    return currentVehicle
+    return HttpResponseRedirect(reverse('customer:viewRental', args=(customer_id, 0)))
 
 
 def viewRental(request, customer_id, vehicle_id):
-    reservationObj = Reservation.objects.filter(userId=customer_id).values()
+    today = date.today()
+    activeReservations = Reservation.objects.filter(userId=customer_id, startDate__lte=today, endDate__gte=today).values()
+    pastReservations = Reservation.objects.filter(userId=customer_id, endDate__lt=today).values()
+    futureReservations = Reservation.objects.filter(userId=customer_id, startDate__gt=today).values()
+
+    context = {
+        "activeReservations": filterReservations(activeReservations),
+        "pastReservations": filterReservations(pastReservations),
+        "futureReservations": filterReservations(futureReservations),
+    }
+    return render(request, "customer/rental.html", context)
+
+
+def filterReservations(reservationObj):
     rentals = []
     reservations = []
-
+    
     for reservation in reservationObj:
-        # This will be useful to calculate if a rental is booked or not
-        # d1 = reservation.get('startDate')
-        # d2 = reservation.get('endDate')
-
-        # days = (d2 - d1).days
-        # print(days)
-
-        rentals.append(getVehicle(reservation.get('carId')))
+        rentals.append(Vehicle.objects.get(vehicleID=reservation.get('carId')))
         reservations.append(reservation)
 
-    resDetails = zip(rentals, reservations)
+    return zip(rentals, reservations)
 
-    
-    return render(request, "customer/rental.html", {"resDetails" : resDetails })
+
+# accesses the customer profile via the customer id and updates the moneyBalance field
+# Redirects back to the vehicle page after the balance has been updated in the database
+def addBalance(request, customer_id, vehicle_id):
+    customer = Profile.objects.get(id=customer_id)
+
+    add = request.POST.get('add')
+    addedBalance = customer.moneyBalance + int(add)
+    customer.moneyBalance = addedBalance
+
+    customer.save()
+
+    return HttpResponseRedirect(reverse('customer:vehiclePage', args=(customer_id, vehicle_id)))
+
+
 
 
 
