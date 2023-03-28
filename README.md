@@ -40,7 +40,18 @@ python manage.py loaddata vehicles_mock.json
 
 ## Unit Testing Instructions
 
-Unit testing will test aspects of the app laid out in use case diagrams. The unit tests are not completed yet, but once complete the instructions on how to use them will be stored here. Unit tests will be stored in the app directory in a file called *testing.py*. This will become accessible once created. 
+To test all unit tests in the project run the following command:
+
+```
+python manage.py test
+```
+
+To test all tests associated with the Reservation Object, run the following command:
+
+```
+python manage.py test reservation
+
+```
 
 ## System Testing Instructions
 
