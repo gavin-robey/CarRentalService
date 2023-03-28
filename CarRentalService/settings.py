@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rental.apps.RentalConfig',
     'users.apps.UsersConfig',
     'employee.apps.EmployeeConfig',
+    'manager.apps.ManagerConfig',
     'reservation',
     'customer',
     'tailwind',

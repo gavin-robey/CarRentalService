@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <title>User Information</title>
+  </head>
+  <body>
+    <h1>All Users:</h1>
+    
+    <p><button><a href="{% url 'manager:pay-employees' %}">Pay Employees</a></button> Current wage: $15/hr</p>
+    
+
+    <table>
+        <tr>
+          <th>Username</th>
+          <th>Hours worked</th>
+          <th>Money balance</th>
+        </tr>
+
+        {% for User in allusers %}
+            <tr>
+                <td>{{ User}}</td>
+                <td>{{ User.profile.hoursWorked}}</td>
+                <td>{{ User.profile.moneyBalance}}</td>
+            </tr>                        
+        {% endfor %}
+
+        
+      </table>
+
+      <h1>All Vehicles:</h1>
+      <button><a href="{% url 'manager:create-vehicle' %}">Create New Vehicle</a></button>
+      <br>
+      <br>
+  
+
+    <table>
+        <tr>
+          <th>Vehicle</th>
+          <th>Year</th>
+          <th>Renting Price</th>    
+          <th>Is retired?</th>      
+          <th>Update</th>
+        </tr>
+
+        {% for Vehicle in allvehicles %}
+            <tr>
+                <td>{{ Vehicle.vehicleMake}} {{ Vehicle.vehicleModel}}</td>
+                <td>{{ Vehicle.vehicleYear}}</td>
+                <td> ${{ Vehicle.vehiclePrice}}</td>
+                <td> {{ Vehicle.vehicleIsRetired}}</td>              
+                <td><a href="{% url 'manager:update-vehicle' Vehicle.vehicleID %}">Click to update</a></td>
+                
+            </tr>
+                                    
+        {% endfor %}
+        
+      </table> 
+
+      
+    
+  </body>
+</html>
