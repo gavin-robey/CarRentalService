@@ -8,18 +8,142 @@
     <title>Your Rentals</title>
     {% tailwind_css %}
 </head>
-<body>
-    <h1>Your Rentals</h1>
-    <h1>Your Balance: ${{balance}}</h1>
-        {% for rental, reservation in resDetails %}
-            <div style="background-color: lightgray; margin: 20px;">
-                <p>{{rental.vehicleMake}}</p>
-                <p>{{rental.vehicleModel}}</p>
-                <img src="{{rental.vehicleImage.url}}" width="700px" height="400px">
-                <p>${{rental.vehiclePrice}} per day</p>
-                <h2>Your booking dates: {{reservation.startDate}}-{{reservation.endDate}}</h2>
-                <p>Total Cost: (calculate later)</p>
+<body class="bg-secondary text-white-900">
+    <nav class="flex items-center justify-between flex-wrap bg-primary p-5">
+        <div class="flex items-center flex-shrink-0 text-white mr-6">
+            <svg class="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z"/></svg>
+            <span class="font-semibold text-xl tracking-tight">Your Rentals</span>
+        </div>    
+        <div class="static">
+            <img src="{% static 'customer/Images/profile.png' %}" width="40" height="40" class="hover:scale-125 transition-all duration-500" onclick="display(event)"/>
+        </div>
+    </nav>
+
+    <div class="w-full h-full bg-black opacity-50 absolute" id="background" style="visibility: hidden;" onclick="remove(event)"></div>
+    <div class="bg-primary absolute right-5 mt-5 p-5 text-white rounded-md" id="profileMenu" style="visibility: hidden">
+        <p class="text-xl">Your Balance: <span class="float-right font-bold">${{request.user.profile.moneyBalance}}</span></p>
+        <div class="flex flex-col items-center justify-center" >
+            <button class="bg-purple-900 w-52 h-10 mt-5 rounded-md font-semibold">Add To Account</button>
+            <a class="bg-purple-900 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold"  href="{% url 'customer:viewRental' request.user.profile.id 0 %}">View Rentals</a>
+            <a class="bg-purple-900 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold" href="{% url 'login' %}">Log Out</a>
+        </div>
+    </div>
+
+    <p>Active Reservations </p>
+    {% for rental, reservation in activeReservations %}
+        <div class="flex justify-center mt-20 ">
+            <div class="flex md:flex-row flex-col bg-primary rounded-md p-5">
+                <div class="basis-full">
+                    <img src="{{rental.vehicleImage.url}}" class="sm:w-auto w-[26rem] sm:h-96 rounded-md">
+                </div>
+                <div class="w-full basis-1/4 flex md:flex-col flex-row justify-center md:mt-0 mt-10">
+                    <img src="{{rental.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-14 mr-4">
+                    <img src="{{rental.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-12 mr-4">
+                    <img src="{{rental.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md hover:scale-110 transition-all ">
+                </div>
             </div>
-        {% endfor %}
+        </div> 
+
+        <div class="flex justify-center mb-10">
+            <div class="bg-primary md:w-[60rem] sm:w-[45rem] w-[26rem] mt-5 rounded-md">
+                <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{rental.vehicleYear}} <span>{{rental.vehicleMake}}</span> <span>{{rental.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
+                <p class="ml-5 mt-2 sm:text-base text-sm"> ${{rental.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
+                <h2 class="mb-5 ml-5 mt-2">Your booking dates: {{reservation.startDate}}-{{reservation.endDate}}</h2>
+            </div>
+        </div>
+    {% endfor %}    
+
+    <p>Future Reservations</p>
+    {% for rental, reservation in futureReservations %}
+        <div class="flex justify-center mt-20 ">
+            <div class="flex md:flex-row flex-col bg-primary rounded-md p-5">
+                <div class="basis-full">
+                    <img src="{{rental.vehicleImage.url}}" class="sm:w-auto w-[26rem] sm:h-96 rounded-md">
+                </div>
+                <div class="w-full basis-1/4 flex md:flex-col flex-row justify-center md:mt-0 mt-10">
+                    <img src="{{rental.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-14 mr-4">
+                    <img src="{{rental.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-12 mr-4">
+                    <img src="{{rental.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md hover:scale-110 transition-all ">
+                </div>
+            </div>
+        </div> 
+
+        <div class="flex justify-center mb-10">
+            <div class="bg-primary md:w-[60rem] sm:w-[45rem] w-[26rem] mt-5 rounded-md">
+                <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{rental.vehicleYear}} <span>{{rental.vehicleMake}}</span> <span>{{rental.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
+                <p class="ml-5 mt-2 sm:text-base text-sm"> ${{rental.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
+                <h2 class="mb-5 ml-5 mt-2">Your booking dates: {{reservation.startDate}}-{{reservation.endDate}}</h2>
+            </div>
+        </div>
+    {% endfor %}
+
+    <p>Past Reservations</p>
+    {% for rental, reservation in pastReservations %}
+        <div class="flex justify-center mt-20 ">
+            <div class="flex md:flex-row flex-col bg-primary rounded-md p-5">
+                <div class="basis-full">
+                    <img src="{{rental.vehicleImage.url}}" class="sm:w-auto w-[26rem] sm:h-96 rounded-md">
+                </div>
+                <div class="w-full basis-1/4 flex md:flex-col flex-row justify-center md:mt-0 mt-10">
+                    <img src="{{rental.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-14 mr-4">
+                    <img src="{{rental.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-12 mr-4">
+                    <img src="{{rental.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md hover:scale-110 transition-all ">
+                </div>
+            </div>
+        </div> 
+
+        <div class="flex justify-center mb-10">
+            <div class="bg-primary md:w-[60rem] sm:w-[45rem] w-[26rem] mt-5 rounded-md">
+                <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{rental.vehicleYear}} <span>{{rental.vehicleMake}}</span> <span>{{rental.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
+                <p class="ml-5 mt-2 sm:text-base text-sm"> ${{rental.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
+                <h2 class="mb-5 ml-5 mt-2">Your booking dates: {{reservation.startDate}}-{{reservation.endDate}}</h2>
+            </div>
+        </div>
+    {% endfor %}
+
+    <script>
+        var profileMenu = document.getElementById('profileMenu')
+        var background = document.getElementById('background')
+
+        function display(event){
+            profileMenu.style.visibility = 'visible';
+            background.style.visibility = 'visible';
+            disableScroll();
+        }
+
+        function remove(event){
+            event.currentTarget.style.visibility = "hidden";
+            profileMenu.style.visibility = "hidden";
+            enableScroll();
+        }
+
+        /**
+         * Disables scrolling on the current page by preventing the default 
+         * behavior of the mouse wheel and touch events.
+         */
+        function disableScroll() {
+            document.body.style.overflow = "hidden";
+            document.addEventListener("touchmove", preventDefault, { passive: false });
+            document.addEventListener("wheel", preventDefault, { passive: false });
+        }
+
+        /**
+         * Enables scrolling on the current page by restoring the default behavior 
+         * of the mouse wheel and touch events.
+         */
+        function enableScroll() {
+            document.body.style.overflow = "auto";
+            document.removeEventListener("touchmove", preventDefault);
+            document.removeEventListener("wheel", preventDefault);
+        }
+
+        /**
+         * Prevents the default behavior of the specified event by calling the preventDefault method on the event object.
+         * @param {Event} e - The event object to prevent the default behavior of.
+         */
+        function preventDefault(e) {
+            e.preventDefault();
+        }
+    </script>
 </body>
 </html>

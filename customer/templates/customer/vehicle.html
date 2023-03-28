@@ -9,6 +9,8 @@
     {% tailwind_css %}
 </head>
 <body class="bg-secondary text-white-900">
+
+    <!-- Navbar with logo, page name and profile symbol -->
     <nav class="flex items-center justify-between flex-wrap bg-primary p-5">
         <div class="flex items-center flex-shrink-0 text-white mr-6">
             <svg class="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z"/></svg>
@@ -19,17 +21,18 @@
         </div>
     </nav>
 
-    <div class="w-full h-full bg-black opacity-50 absolute" id="background" style="visibility: hidden;" onclick="remove(event)"></div>
-
+    <!-- Drop Down Menu and Background -->
+    <div class="fixed top-0 w-full h-full bg-black opacity-50" id="background" style="visibility: hidden;" onclick="remove(event)"></div>
     <div class="bg-primary absolute right-5 mt-5 p-5 text-white rounded-md" id="profileMenu" style="visibility: hidden">
         <p class="text-xl">Your Balance: <span class="float-right font-bold">${{request.user.profile.moneyBalance}}</span></p>
         <div class="flex flex-col items-center justify-center" >
-            <button class="bg-purple-900 w-52 h-10 mt-5 hover:scale-110 transition-all rounded-md font-semibold">Add To Account</button>
-            <a class="bg-purple-900 w-52 h-10 mt-5 hover:scale-110 transition-all rounded-md flex flex-col items-center justify-center font-semibold"  href="{% url 'customer:viewRental' request.user.profile.id 0 %}">View Rentals</a>
-            <a class="bg-purple-900 w-52 h-10 mt-5 hover:scale-110 transition-all rounded-md flex flex-col items-center justify-center font-semibold" href="{% url 'login' %}">Log Out</a>
+            <button class="bg-purple-900 hover:bg-purple-700 w-52 h-10 mt-5 rounded-md font-semibold" onclick="enablePaymentForm()">Add To Account</button>
+            <a class="bg-purple-900 hover:bg-purple-700 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold"  href="{% url 'customer:viewRental' request.user.profile.id 0 %}">View Rentals</a>
+            <a class="bg-purple-900 hover:bg-purple-700 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold" href="{% url 'login' %}">Log Out</a>
         </div>
     </div>
-
+    
+    <!-- Vehicle Images Formatting and html  -->
     <div class="flex justify-center mt-10">
         <div class="flex md:flex-row flex-col">
             <div class="basis-full">
@@ -43,72 +46,216 @@
         </div>
     </div> 
 
-    <div class="flex justify-center">
+    <!-- Form Section -->
+    <div class="flex justify-center mb-10">
         <div class="bg-primary md:w-[57.5rem] sm:w-[42.5rem] w-[26rem] mt-10 rounded-md">
-            <div>
-
-            </div>
-            <p class="ml-4 mt-4 text-lg font-semibold">{{vehicleInfo.vehicleYear}} <span>{{vehicleInfo.vehicleMake}}</span> <span>{{vehicleInfo.vehicleModel}}</span></p>
-            <p class="ml-4 mt-2 text-lg font-semibold"> ${{vehicleInfo.vehiclePrice}} / Day </p>
+            <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{vehicleInfo.vehicleYear}} <span>{{vehicleInfo.vehicleMake}}</span> <span>{{vehicleInfo.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
+            <p class="ml-5 mt-2 sm:text-base text-sm"> ${{vehicleInfo.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
 
             <form action="{% url 'customer:submitRental' id vehicleInfo.vehicleID %}" method="post">
                 {% csrf_token %}
                 <div>
-                    <div class="flex flex-row justify-center items-center mt-5">
-                        <input class="peer block min-h-[auto] w-1/2 ml-5 rounded border-0 bg-secondary py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]" type="date" name="startDate" id="startDate" onchange="cal()" min="" required>
-                        <p class="ml-5 mr-5 font-semibold">To</p>
-                        <input class="peer block min-h-[auto] w-1/2 mr-5 rounded border-0 bg-secondary py-[0.32rem] px-3 leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]" type="date" name="endDate" id="endDate" onchange="cal()" min="" required>
+                    <div class="mt-10 ml-5">
+                        <p>Select Rental Dates</p>
                     </div>
-                    <input type="text" name="pickUpAddress" id="pickUpAddress" onchange="cal()">
-                    <input type="checkbox" name="hasInsurance">
-                    <input type="submit" value="Book Rental" id="submit" class="bg-purple-900 w-52 h-10 mt-1 hover:scale-110 transition-all duration-500 rounded-md flex flex-col items-center justify-center float-right font-semibold mr-4">
-                    <input type="number" name="totalCost" onchange="cal()" id="totalCostField" style="visibility: hidden;">
+                    <div class="flex flex-row justify-center items-center mt-2">
+                        <input class=" peer block min-h-[auto] w-1/2 ml-5 rounded border-transparent bg-secondary border-2 focus:ring-purple-900 focus:border-purple-900 focus:ring-5 text-gray-700" type="date" name="startDate" id="startDate" min="" required onchange="cal()" >
+                        <p class="ml-5 mr-5 font-semibold">To</p>
+                        <input class=" peer block min-h-[auto] w-1/2 mr-5 rounded border-transparent bg-secondary border-2 focus:ring-purple-900 focus:border-purple-900 focus:ring-1 text-gray-700" type="date" name="endDate" id="endDate"  min="" required onchange="cal()">
+                    </div>
+                    <div class="flex flex-row items-center h-5 mt-2">
+                        <p class="w-1/2 ml-5 sm:text-base text-xs text-red-500 font-semibold" style="visibility: hidden;" id="leftError">Must Enter A Current Date</p>
+                        <p class="ml-5 mr-5 hidden">&nbsp; &nbsp; &nbsp;</p>
+                        <p class="w-1/2 mr-5 sm:text-base text-xs text-red-500 font-semibold" style="visibility: hidden;" id="rightError">Must Enter A Current Date</p>
+                    </div>
+                    <div class="mt-3 ml-5">
+                        <p>Enter Pick Up Address</p>
+                    </div>
+                    <div class="flex justify-center">
+                        <input class=" mt-2 w-full ml-5 mr-5 rounded-md border-transparent bg-secondary border-2 focus:ring-purple-900 focus:border-purple-900 focus:ring-1" type="text" name="pickUpAddress" id="pickUpAddress" onchange="cal()">
+                    </div>
+                    <input class="h-10" type="number" name="totalCost" onchange="cal()" id="totalCostField" style="visibility: hidden;">
+                    <div class="flex flex-row items-center ml-5">
+                        <span><p>Add Insurance For An Additional $25?</p></span>
+                        <input type="checkbox" name="hasInsurance" id="hasInsurance" class="ml-5 rounded-full" onchange="addInsurance(this)">
+                    </div>
+                    <div class="p-5 float-right">
+                        <input type="submit" value="Book Rental" id="submit" class=" bg-purple-900 w-52 h-10 hover:bg-purple-700 rounded-md flex flex-col items-center disabled:bg-gray-900 disabled:text-gray-700 justify-center font-semibold">
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- popup for when dates are booked -->
+    <div class="flex justify-center">
+        <div class="fixed top-1/3 md:w-[30rem] w-96 bg-primary rounded-md p-5" id="booked" style="visibility: hidden;">
+            <p class="text-lg">This Vehicle is Currently Booked During Your Selected Dates</p>
+            <button class="float-right mt-10 bg-purple-900 w-52 h-10 hover:bg-purple-700 rounded-md flex flex-col items-center disabled:bg-gray-900 disabled:text-gray-700 justify-center font-semibold" onclick="remove()">Ok</button>
+        </div>
+    </div>
+    
+
+    <!-- Pop Up used for adding money to the account-->
+    <div class="flex justify-center" style="visibility: hidden;" id="paymentForm">
+        <div class="fixed top-36 sm:w-[40rem] md:w-[50rem] w-96 bg-secondary rounded-md p-5">
+            <span class="flex items-center float-right bg-red-700 text-red-900 hover:bg-red-300 hover:text-red-500 pl-3 pr-3 pt-1 pb-1.5 rounded-full font-semibold" onclick="remove()">X</span>
+            <div class="flex justify-center">
+                <p class="font-semibold text-lg">Add To Balance</p>
+            </div>
+            <label class="relative w-full flex flex-col mt-5">
+                <span class="font-bold mb-3">Card number</span>
+                <input onchange="updateAddPaymentButton()" id="cardInput" class="focus:ring-purple-900 focus:border-purple-900 focus:ring-1 rounded-md peer pl-12 pr-2 py-2 border-2 border-transparent placeholder-gray-700 bg-primary" type="text" name="card_number" placeholder="0000 0000 0000" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute bottom-0 left-0 -mb-0.5 transform translate-x-1/2 -translate-y-1/2 text-white-900 peer-placeholder-shown:text-gray-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+            </label>
+            
+            <label class="relative flex-1 flex flex-col mt-5">
+                <span class="font-bold mb-3">Expiration date</span>
+                <input onchange="updateAddPaymentButton()" id="expirationInput" class="focus:ring-purple-900 focus:border-purple-900 focus:ring-1 rounded-md peer pl-12 pr-2 py-2 border-2 border-transparent placeholder-gray-700 bg-primary" type="text" name="expire_date" placeholder="MM/YY" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute bottom-0 left-0 -mb-0.5 transform translate-x-1/2 -translate-y-1/2 text-white-900 peer-placeholder-shown:text-gray-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </label>
+            
+            <label class="relative flex-1 flex flex-col mt-5">
+                <span class="font-bold flex items-center gap-3 mb-3">
+                    CVC/CVV
+                    <span class="relative group">
+                    <span class="hidden group-hover:flex justify-center items-center px-2 py-1 text-xs absolute -right-2 transform translate-x-full -translate-y-1/2 w-max top-1/2 bg-orange-900 rounded-md text-gray-900"> Enter The Three Numbers On The Back</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    </span>
+                </span>
+                <input onchange="updateAddPaymentButton()" id="cvvInput" class="focus:ring-purple-900 focus:border-purple-900 focus:ring-1 rounded-md peer pl-12 pr-2 py-2 border-2 border-transparent placeholder-gray-700 bg-primary" type="text" name="card_cvc" placeholder="&bull;&bull;&bull;" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute bottom-0 left-0 -mb-0.5 transform translate-x-1/2 -translate-y-1/2 text-white-900 peer-placeholder-shown:text-gray-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </label>
+            <form action="{% url 'customer:addBalance' id vehicleInfo.vehicleID %}" method="post">
+                {% csrf_token %}
+                <p class="mt-5 font-semibold">Enter Amount</p>
+                <div class="flex flex-row mt-3 items-center">
+                    <p class="mr-5">$</p>
+                    <input onchange="updateAddPaymentButton()" min="0" oninput="this.value = Math.abs(this.value)" placeholder="0" id="amountInput" type="number" name="add" class="border-2 focus:ring-purple-900 focus:border-purple-900 focus:ring-1 bg-primary rounded-md border-transparent w-full">
+                </div>
+                <input type="submit" id="addBalance" value="Add Balance" class="float-right mt-10 bg-purple-900 w-52 h-10 hover:bg-purple-700 rounded-md flex flex-col items-center disabled:bg-gray-900 disabled:text-gray-700 justify-center font-semibold">
+            </form>
+        </div>
+    </div>
+    
+
+    <script type="text/javascript">
+        const reserved = []
+    </script>
+
     {% if reserved %}
         {% for reservation in reserved%}
-            <p>{{reservation.startDate}}-{{reservation.endDate}}</p>
+            <script type="text/javascript">
+                reserved.push({startDate: "{{reservation.startDate}}", endDate: "{{reservation.endDate}}"})
+            </script>
         {% endfor%}
     {% endif %}
 
-    <p>Total Days: <span id="numdays">0</span></p>
-    <p>Total Cost: $<span id="totalCost">0</span></p>
 
-    
-
-    <form action="{% url 'customer:addBalance' id vehicleInfo.vehicleID %}" method="post">
-        {% csrf_token %}
-        <input type="number" name="add">
-        <input type="submit" value="add balance">
-    </form>
-
-    
     <script type="text/javascript">
         var date = new Date();
+        var insurance = 25;
         document.getElementById('submit').disabled = true;
+        document.getElementById('addBalance').disabled = true;
 
+        // Gets the difference of days between the two date pickers
         function GetDays(){
             var dropdt = new Date(document.getElementById("endDate").value);
             var pickdt = new Date(document.getElementById("startDate").value);
             return parseInt((dropdt - pickdt) / (24 * 3600 * 1000));
         }
 
-        function cal(){
-            if(document.getElementById("endDate")){
-                document.getElementById("totalCost").textContent=GetDays() * "{{vehicleInfo.vehiclePrice}}";
-                document.getElementById("numdays").textContent=GetDays();
-                document.getElementById("totalCostField").value=GetDays() * "{{vehicleInfo.vehiclePrice}}"
-            }  
 
+        function cal(){
             if(checkBalance() && checkForm()){
                 document.getElementById('submit').disabled = false;
             }else{
                 document.getElementById('submit').disabled = true;
             }
+
+            verifyDate(); // Ensures the date input is correct
+
+            // Ensures no UI elements display "NaN"
+            const totalCost = isNaN(GetDays() * "{{vehicleInfo.vehiclePrice}}") ? 0 : GetDays() * "{{vehicleInfo.vehiclePrice}}";
+            const totalDays = isNaN(GetDays()) ? 0 : GetDays();
+            
+            if(document.getElementById("endDate")){
+                document.getElementById("totalCost").textContent = totalCost;
+                document.getElementById("numdays").textContent = totalDays;
+                document.getElementById("totalCostField").value = totalCost;
+            }  
             checkBalance();
+        }
+
+        // Adds the cost of insurance to the total cost of the rental
+        function addInsurance(checkbox) {
+            var currentBalance = document.getElementById("totalCost").textContent;
+            if (checkbox.checked) {
+                document.getElementById("totalCost").textContent = parseInt(currentBalance) + insurance;
+            } else {
+                document.getElementById("totalCost").textContent = parseInt(currentBalance) - insurance;
+            }
+        }
+
+        // Ensures the difference between the dates cannot be negative
+        // Then Ensures the dates selected are not in the past
+        function verifyDate() {
+            const startDate = new Date(document.getElementById("startDate").value);
+            const endDate = new Date(document.getElementById("endDate").value);
+            const selectedDays = (endDate - startDate) / (1000 * 60 * 60 * 24); // Calculate the difference in days
+
+            if (selectedDays < 0) {
+                // Swap the values of the two date pickers
+                const temp = startDate;
+                document.getElementById("startDate").value = endDate.toISOString().slice(0, 10);
+                document.getElementById("endDate").value = temp.toISOString().slice(0, 10);
+            }
+
+            if(isLessThanToday(startDate)){
+                document.getElementById("leftError").style.visibility = "visible"; 
+                document.getElementById('submit').disabled = true;
+            }else{
+                document.getElementById("leftError").style.visibility = "hidden";
+            }
+
+            if(isLessThanToday(endDate)){
+                document.getElementById('submit').disabled = true;
+                document.getElementById("rightError").style.visibility = "visible"; 
+            }else{
+                document.getElementById("rightError").style.visibility = "hidden";
+            }
+
+            if(verifyBooking(startDate, endDate)){
+                document.getElementById('submit').disabled = true;
+                document.getElementById('booked').style.visibility = "visible";
+                document.getElementById('background').style.visibility = "visible";
+            }
+        }
+
+        /**
+         * Checks if the specified date is yesterday or less.
+         * @param {Date} date - The date to check.
+         * @returns {boolean} True if the specified date is yesterday or less, false otherwise.
+         */
+        function isLessThanToday(date) {
+            const today = new Date();
+            const yesterday = new Date();
+            yesterday.setDate(today.getDate() - 1);
+
+            return date.getTime() <= yesterday.getTime();
+        }
+
+        function enablePaymentForm(){
+            document.getElementById("profileMenu").style.visibility = "hidden";
+            document.getElementById("paymentForm").style.visibility = "visible";
         }
 
         function checkBalance(){
@@ -123,11 +270,49 @@
             let startDate = document.getElementById("startDate").value;
             let endDate = document.getElementById("endDate").value;
             let address = document.getElementById("pickUpAddress").value;
-
+            
             if(startDate == "" || endDate == "" | address == ""){
                 return false;
             }else{
                 return true;
+            }
+        }
+
+        function verifyBooking(givenStart, givenEnd){
+            if(!isNaN(givenEnd)){    
+                let isNotValid = (startDate, endDate, givenStart, givenEnd) => {
+                        if (givenStart >= startDate && givenStart <= endDate || givenEnd >= startDate && givenEnd <= endDate || isNaN(startDate) || isNaN(endDate)){
+                            return true;
+                        }
+                    }
+                for(var reservation of reserved){
+                    if(isNotValid(new Date(reservation.startDate), new Date(reservation.endDate), givenStart, givenEnd)){
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // All forms for payment pop up must be filled in
+        function checkPayment(){
+            let cardInput = document.getElementById("cardInput").value;
+            let expirationInput = document.getElementById("expirationInput").value;
+            let cvvInput = document.getElementById("cvvInput").value;
+            let amountInput = document.getElementById("amountInput").value;
+            
+            if(cardInput == "" || cvvInput == "" || amountInput == "" || expirationInput == ""){
+                return false;
+            }else{
+                return true;
+            }
+        }
+
+        // Enables the add payment button when all conditions are met
+        function updateAddPaymentButton(){
+            if(checkPayment()){
+                document.getElementById('addBalance').disabled = false;
+            }else{
+                document.getElementById('addBalance').disabled = true;
             }
         }
 
@@ -143,10 +328,9 @@
 
         document.getElementById('startDate').min = getDate(0)
         document.getElementById('endDate').min = getDate(0)
-
-        document.getElementById('startDate').max = getDate(6)
-        document.getElementById('endDate').max = getDate(6)
     </script>
+
+
 
     <script type="text/javascript">
         var profileMenu = document.getElementById('profileMenu')
@@ -155,13 +339,44 @@
         function display(event){
             profileMenu.style.visibility = 'visible';
             background.style.visibility = 'visible';
+            disableScroll();
         }
 
         function remove(event){
-            event.currentTarget.style.visibility = "hidden";
+            background.style.visibility = "hidden";
             profileMenu.style.visibility = "hidden";
+            document.getElementById("paymentForm").style.visibility = "hidden";
+            document.getElementById('booked').style.visibility = "hidden";
+            enableScroll();
+        }
+
+        /**
+         * Disables scrolling on the current page by preventing the default 
+         * behavior of the mouse wheel and touch events.
+         */
+        function disableScroll() {
+            document.body.style.overflow = "hidden";
+            document.addEventListener("touchmove", preventDefault, { passive: false });
+            document.addEventListener("wheel", preventDefault, { passive: false });
+        }
+
+        /**
+         * Enables scrolling on the current page by restoring the default behavior 
+         * of the mouse wheel and touch events.
+         */
+        function enableScroll() {
+            document.body.style.overflow = "auto";
+            document.removeEventListener("touchmove", preventDefault);
+            document.removeEventListener("wheel", preventDefault);
+        }
+
+        /**
+         * Prevents the default behavior of the specified event by calling the preventDefault method on the event object.
+         * @param {Event} e - The event object to prevent the default behavior of.
+         */
+        function preventDefault(e) {
+            e.preventDefault();
         }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
 </body>
 </html>
