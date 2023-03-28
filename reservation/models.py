@@ -15,4 +15,4 @@ class Reservation(models.Model):
     isReturned = models.BooleanField()
 
     def __UUID__(self):
-        return self.reservationId
+        return str(self.startDate) + " to " + str(self.endDate)

@@ -10,7 +10,12 @@ from datetime import date
 
 
 def landingPage(request, customer_id):
-    return render(request, "customer/index.html", {"vehicleInfo": Vehicle.objects.all, "reservationList":  Reservation.objects.all})
+    customerInfo = {
+        "id": customer_id, 
+        "vehicleInfo": Vehicle.objects.all,
+        "reservationList":  Reservation.objects.all
+    }
+    return render(request, "customer/index.html", customerInfo)
 
 
 def vehiclePage(request, customer_id, vehicle_id):
@@ -95,12 +100,34 @@ def addBalance(request, customer_id, vehicle_id):
     add = request.POST.get('add')
     addedBalance = customer.moneyBalance + int(add)
     customer.moneyBalance = addedBalance
-
     customer.save()
 
     return HttpResponseRedirect(reverse('customer:vehiclePage', args=(customer_id, vehicle_id)))
 
 
+# I know there has to be a better way of doing this, I just dont feel like doing it that way right now
+def addBalanceHome(request, customer_id):
+    customer = Profile.objects.get(id=customer_id)
 
+    add = request.POST.get('add')
+    addedBalance = customer.moneyBalance + int(add)
+    customer.moneyBalance = addedBalance
+    customer.save()
+
+    return HttpResponseRedirect(reverse('customer:landingPage', args=(customer_id, )))
+
+
+def cancelBooking(request, customer_id, vehicle_id, reservation_id):
+    reservation = Reservation.objects.get(reservationId=reservation_id)
+    reservation.delete()
+    return HttpResponseRedirect(reverse('customer:viewRental', args=(customer_id, 0)))
+
+
+def requestPickup(request, customer_id, vehicle_id, reservation_id):
+    reservation = Reservation.objects.get(reservationId=reservation_id)
+    reservation.needsPickup = True
+    reservation.save()
+    
+    return HttpResponseRedirect(reverse('customer:viewRental', args=(customer_id, 0)))
 
 

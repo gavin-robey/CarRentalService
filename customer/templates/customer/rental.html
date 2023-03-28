@@ -23,15 +23,17 @@
     <div class="bg-primary absolute right-5 mt-5 p-5 text-white rounded-md" id="profileMenu" style="visibility: hidden">
         <p class="text-xl">Your Balance: <span class="float-right font-bold">${{request.user.profile.moneyBalance}}</span></p>
         <div class="flex flex-col items-center justify-center" >
-            <button class="bg-purple-900 w-52 h-10 mt-5 rounded-md font-semibold">Add To Account</button>
-            <a class="bg-purple-900 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold"  href="{% url 'customer:viewRental' request.user.profile.id 0 %}">View Rentals</a>
-            <a class="bg-purple-900 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold" href="{% url 'login' %}">Log Out</a>
+            <button class="bg-purple-900 hover:bg-purple-700 w-52 h-10 mt-5 rounded-md font-semibold">Add To Account</button>
+            <a class="bg-purple-900 hover:bg-purple-700 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold"  href="{% url 'customer:viewRental' request.user.profile.id 0 %}">View Rentals</a>
+            <a class="bg-purple-900 hover:bg-purple-700 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold" href="{% url 'login' %}">Log Out</a>
         </div>
     </div>
 
-    <p>Active Reservations </p>
+    <div class="flex justify-center">
+        <h2 class="text-4xl font-semibold mt-20 ">Active Reservations </h2>
+    </div>
     {% for rental, reservation in activeReservations %}
-        <div class="flex justify-center mt-20 ">
+        <div class="flex justify-center mt-10 ">
             <div class="flex md:flex-row flex-col bg-primary rounded-md p-5">
                 <div class="basis-full">
                     <img src="{{rental.vehicleImage.url}}" class="sm:w-auto w-[26rem] sm:h-96 rounded-md">
@@ -44,18 +46,25 @@
             </div>
         </div> 
 
-        <div class="flex justify-center mb-10">
+        <div class="flex justify-center mb-14">
             <div class="bg-primary md:w-[60rem] sm:w-[45rem] w-[26rem] mt-5 rounded-md">
                 <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{rental.vehicleYear}} <span>{{rental.vehicleMake}}</span> <span>{{rental.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
                 <p class="ml-5 mt-2 sm:text-base text-sm"> ${{rental.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
                 <h2 class="mb-5 ml-5 mt-2">Your booking dates: {{reservation.startDate}}-{{reservation.endDate}}</h2>
+
+                <form action="{% url 'customer:requestPickup' request.user.profile.id 0 reservation.reservationId %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" name="requestMaintenance" id="requestMaintenance" value="Request Maintenance" class="float-right mb-5 mr-5 bg-purple-900 w-52 h-10 rounded-md font-semibold hover:bg-purple-700">
+                </form>
             </div>
         </div>
     {% endfor %}    
 
-    <p>Future Reservations</p>
+    <div class="flex justify-center">
+        <h2 class="text-4xl font-semibold mt-6 ">Future Reservations</h2>
+    </div>
     {% for rental, reservation in futureReservations %}
-        <div class="flex justify-center mt-20 ">
+        <div class="flex justify-center mt-10 ">
             <div class="flex md:flex-row flex-col bg-primary rounded-md p-5">
                 <div class="basis-full">
                     <img src="{{rental.vehicleImage.url}}" class="sm:w-auto w-[26rem] sm:h-96 rounded-md">
@@ -68,18 +77,25 @@
             </div>
         </div> 
 
-        <div class="flex justify-center mb-10">
+        <div class="flex justify-center mb-14">
             <div class="bg-primary md:w-[60rem] sm:w-[45rem] w-[26rem] mt-5 rounded-md">
                 <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{rental.vehicleYear}} <span>{{rental.vehicleMake}}</span> <span>{{rental.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
                 <p class="ml-5 mt-2 sm:text-base text-sm"> ${{rental.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
                 <h2 class="mb-5 ml-5 mt-2">Your booking dates: {{reservation.startDate}}-{{reservation.endDate}}</h2>
+
+                <form action="{% url 'customer:cancelBooking' request.user.profile.id 0 reservation.reservationId %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" name="cancel" id="cancel" value="Cancel Booking" class="float-right mb-5 mr-5 bg-purple-900 w-52 h-10 rounded-md font-semibold hover:bg-purple-700">
+                </form>
             </div>
         </div>
     {% endfor %}
 
-    <p>Past Reservations</p>
+    <div class="flex justify-center">
+        <h2 class="text-4xl font-semibold mt-6 ">Past Reservations</h2>
+    </div>
     {% for rental, reservation in pastReservations %}
-        <div class="flex justify-center mt-20 ">
+        <div class="flex justify-center mt-10">
             <div class="flex md:flex-row flex-col bg-primary rounded-md p-5">
                 <div class="basis-full">
                     <img src="{{rental.vehicleImage.url}}" class="sm:w-auto w-[26rem] sm:h-96 rounded-md">
@@ -92,7 +108,7 @@
             </div>
         </div> 
 
-        <div class="flex justify-center mb-10">
+        <div class="flex justify-center mb-14">
             <div class="bg-primary md:w-[60rem] sm:w-[45rem] w-[26rem] mt-5 rounded-md">
                 <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{rental.vehicleYear}} <span>{{rental.vehicleMake}}</span> <span>{{rental.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
                 <p class="ml-5 mt-2 sm:text-base text-sm"> ${{rental.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
