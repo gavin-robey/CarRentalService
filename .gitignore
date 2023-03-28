@@ -9,4 +9,5 @@ __pycache__
 *.dtmp
 db.sqlite3
 *.kate-swp
-media/
+CarRentalService/media/vehicles/*
+!CarRentalService/media/vehicles/dummy/

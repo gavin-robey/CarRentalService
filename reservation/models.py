@@ -3,7 +3,9 @@ from django.db import models
 
 class Reservation(models.Model):
     reservationId = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
     carId = models.UUIDField(editable=True)
+
     userId = models.IntegerField()
     startDate = models.DateField(auto_now_add=False, auto_now=False, blank=True)
     endDate = models.DateField(auto_now_add=False, auto_now=False, blank=True)

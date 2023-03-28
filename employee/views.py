@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from .models import Vehicle
 from .forms import VehicleAddForm
+from reservation.models import Reservation
 from django.http import HttpResponseRedirect
 
 def index(request):
@@ -18,8 +19,8 @@ def addVehicle(request):
   if request.method == 'POST':
     form = VehicleAddForm(request.POST, request.FILES)
     if form.is_valid():
-      addVehicleToDb(request)
-      return HttpResponseRedirect('/employee/vehicleDetails/')
+      vid = addVehicleToDb(request)
+      return HttpResponseRedirect('/employee/vehicle/' + str(vid))
   else:
     form = VehicleAddForm()
   
@@ -28,7 +29,6 @@ def addVehicle(request):
   
 def addVehicleToDb(request):
   v = Vehicle()
-  # v.vehicleID = ??
   v.vehicleYear = request.POST.get('vehicleYear')
   v.vehicleMake = request.POST.get('vehicleMake')
   v.vehicleModel = request.POST.get('vehicleModel')
@@ -38,13 +38,17 @@ def addVehicleToDb(request):
   v.vehicleIsRetired = request.POST.get('vehicleIsRetired') == 'on'
   
   v.save()
+  return v.vehicleID
     
-def vehicleAddConfirm(request):
-  return HttpResponse("Confirmed adding vehicle!")
-
 def vehicleDetails(request, vehicle_id):
   vehicle = Vehicle.objects.get(pk=vehicle_id)
-  return HttpResponse(vehicle.vehicleMake)
+  template = loader.get_template('employee/vehicle.html')
+  reservations = Reservation.objects.filter(carId=vehicle_id)
+  context = {
+    'reservations': reservations,
+    'vehicle': vehicle,
+  }
+  return HttpResponse(template.render(context, request))
 
 def addCustomer(request):
   return HttpResponse("Add Customer")
