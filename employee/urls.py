@@ -9,7 +9,6 @@ urlpatterns = [
   path('addvehicle/', views.addVehicle, name='addVehicle'),
   path('addcustomer/', views.addCustomer, name='addcustomer'),
   path('searchvehicle/', views.searchVehicle, name='searchvehicle'),
-  
   path('vehicle/<str:vehicle_id>/', views.vehicleDetails, name='vehicleDetails'),
 ]
 
