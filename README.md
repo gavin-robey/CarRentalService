@@ -10,6 +10,12 @@ All code pertaining to this project is stored in the "CarRentalService" director
 
 All documentation including the Project plan, Use Case Diagrams, Activity diagrams, Class diagrams, Prototypes, and Requirements Definition are stored in the "docs" folder.
 
+Sprint planning can be found in "docs/sprint_planning"
+
+Standup Reports can be found in "docs/standup_reports"
+
+Sprint Retrospectives can be found in "docs/sprint_retrospective"
+
 ## Version-control procedures
 
 Each collaborator will fork and clone this repository to their own _github_ account. Whenever changes must be made to the repository, each collaborator will send a pull request to ensure any issues are montitored and controlled.
@@ -29,6 +35,10 @@ python3 --version
 ```
 python3 -m django --version
 ```
+* If Python is not installed, visit [Python download](https://www.python.org/downloads/) to install python.
+* If Django is not installed, visit [Django download](https://www.djangoproject.com/download/) to install Django.
+
+<br> 
 
 2. Install Node.js
 
@@ -36,6 +46,8 @@ python3 -m django --version
 - Run the installer.
 - Follow the installer steps, agree the license agreement and click the next button.
 - Restart your system/machine.
+
+<br> 
 
 3. Ensure both Node.js and npm are installed:
 
@@ -47,11 +59,19 @@ node -v
 npm -v
 ```
 
+<br>  
+
 4. Install pip:
 
 ```
-python3 get-pip.py
+python -m ensurepip --upgrade
 ```
+* Ensure Pip is installed
+```
+pip3 --version
+```
+
+<br> 
 
 5. Clone the repository:
 
@@ -59,18 +79,30 @@ python3 get-pip.py
 git clone https://github.com/gavin-robey/CarRentalService
 ```
 
+<br> 
+
 6. Enter the repository:
 
 ```
 cd CarRentalService
 ```
 
-7. Install Tailwind CSS
+<br> 
+
+7. Install Pillow
+
+```
+python3 -m pip3 install --upgrade Pillow
+```
+
+<br> 
+
+8. Install Tailwind CSS
 
 - Install the django-tailwind package via pip
 
 ```
-python3 -m pip install django-tailwind
+python3 -m pip3 install django-tailwind
 ```
 
 - Install Tailwind CSS dependencies, by running the following command
@@ -79,11 +111,7 @@ python3 -m pip install django-tailwind
 python3 manage.py tailwind install
 ```
 
-8. Install Pillow
-
-```
-python3 -m pip install --upgrade Pillow
-```
+<br> 
 
 9. Make migrations by:
 
@@ -91,11 +119,15 @@ python3 -m pip install --upgrade Pillow
 python3 manage.py makemigrations
 ```
 
+<br> 
+
 10. Then migrate changes:
 
 ```
 python3 manage.py migrate
 ```
+
+<br> 
 
 11. load in testing vehicle and reservation data:
 
@@ -104,13 +136,20 @@ python manage.py loaddata reservations_mock.json
 python manage.py loaddata vehicles_mock.json
 ```
 
+<br> 
+
+
 12. Launch Server:
 
 ```
 python3 manage.py runserver
 ```
 
+<br> 
+
 13. Run server by visiting: http://127.0.0.1:8000/
+
+
 
 ## Unit Testing Instructions
 
