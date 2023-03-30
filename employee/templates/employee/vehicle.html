@@ -1,18 +1,24 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Vehicle</title>
-    <link rel="stylesheet" href="{% static 'temp_style.css' %}"/>
-  </head>
-  <body>
+{% extends "employee_base.html" %}
+
+{% block title %}{{ vehicle.vehicleMake }} {{ vehicle.vehicleModel }}{% endblock %}
+
+{% block content %}
   <a href="/employee/">&lt;--Employee Home</a>
   <h1>{{ vehicle.vehicleYear }} {{ vehicle.vehicleMake }} {{ vehicle.vehicleModel }}</h1>
     {% if vehicle.vehicleImage %}
-      <img src="{{ vehicle.vehicleImage.url }}" class="vehicle-image">
+      <img src="{{ vehicle.vehicleImage.url }}" class="vehicle-image-main">
     {% endif %}
-  <h2>Booked Reservations</h2>
+    
+    {% if todayReservation %}
+      <h2>Reservation Beginning Today!</h2>
+      <a id="checkin-button" href="">Check In Customer</a>
+    {% else %}
+      <p>No reservations beginning today.</p>
+    {% endif %}
+    
+    <a href="/employee/addreservation/{{ vehicle.vehicleID }}">Add Reservation</a>
+    
+  <h2>All Future Reservations</h2>
     {% if reservations %}
       <ul>
       {% for reservation in reservations %}
@@ -24,5 +30,8 @@
     {% else %}
         <p>No reservations have been made.</p>
     {% endif %}
-  </body>
-</html>
+    
+    {{ calendarThis }}
+    {{ calendarNext }}
+    {{ calendarNextNext}}
+{% endblock %}

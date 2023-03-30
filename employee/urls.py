@@ -7,9 +7,9 @@ app_name = 'employee'
 urlpatterns = [
   path('', views.index, name='index'),
   path('addvehicle/', views.addVehicle, name='addVehicle'),
-  path('addcustomer/', views.addCustomer, name='addcustomer'),
+  path('repo/', views.repo, name='repo'),
+  path('addreservation/<str:vehicle_id>/', views.addReservation, name='addreservation'),
   path('searchvehicle/', views.searchVehicle, name='searchvehicle'),
-  
   path('vehicle/<str:vehicle_id>/', views.vehicleDetails, name='vehicleDetails'),
 ]
 

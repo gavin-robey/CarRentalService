@@ -1,33 +1,27 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Employee</title>
-    <link rel="stylesheet" href="{% static 'temp_style.css' %}"/>
-  </head>
-  <body>
-  <h1>Employee Tools</h1>
-  <h2>My Details</h2>
-    <p>Hours Worked: {{request.user.profile.hoursWorked}}</p>
+{% extends "employee_base.html" %}
 
-  <h2>Add Vehicle</h2>
-    <a href="/employee/addvehicle">Go to form</a>
+{% block title %}Retail{% endblock %}
+
+{% block content %}
+  <a href="/employee/addvehicle" id="add-vehicle-button">Add Vehicle</a>
   
+  <a href="/employee/repo" id="switch-to-repo-button">Go To Vehicle Retrieval</a>
+
   <h2>All Vehicles</h2>
     {% if vehicles %}
-      <ul>
+      <div id="vehicles-list">
       {% for vehicle in vehicles %}
-          <a href="/employee/vehicle/{{ vehicle.vehicleID }}"><li>
-            {{ vehicle.vehicleYear }} {{ vehicle.vehicleMake }} {{ vehicle.vehicleModel }} 
+          <div class="vehicle-card">
+            <a href="/employee/vehicle/{{ vehicle.vehicleID }}">
             {% if vehicle.vehicleImage %}
               <img src="{{ vehicle.vehicleImage.url }}" class="vehicle-image">
             {% endif %} 
-            </li></a>
+            <div class="vehicle-details">{{ vehicle.vehicleYear }} {{ vehicle.vehicleMake }} {{ vehicle.vehicleModel }}</div>
+            </a>
+          </div>
       {% endfor %}
-      </ul>
+      </div>
     {% else %}
         <p>No vehicles are available.</p>
     {% endif %}
-  </body>
-</html>
+{% endblock %}
