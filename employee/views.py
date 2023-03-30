@@ -21,6 +21,31 @@ def index(request):
     }
   return HttpResponse(template.render(context, request))
 
+class PickupItem():
+  def __init__(self, pickupR, pickupV):
+    self.carId = pickupR.carId
+    self.endDate = pickupR.endDate
+    self.location = pickupR.pickUpAddress
+    self.make = pickupV.vehicleMake
+    self.model = pickupV.vehicleModel
+    self.year = pickupV.vehicleYear
+  
+def repo(request):
+  pickupRs = Reservation.objects.filter(needsPickup=True)
+  todayPickups = []
+  futurePickups = []
+  for pickupR in pickupRs.filter(endDate=datetime.today()):
+    todayPickups.append(PickupItem(pickupR, Vehicle.objects.get(vehicleID=pickupR.carId)))
+    
+  for pickupR in pickupRs.filter(endDate__gt=datetime.today()):
+    futurePickups.append(PickupItem(pickupR, Vehicle.objects.get(vehicleID=pickupR.carId)))
+  template = loader.get_template('employee/repo.html')
+  context = {
+    'todayPickups':todayPickups,
+    'futurePickups':futurePickups,
+  }
+  return HttpResponse(template.render(context, request))
+  
 def addVehicle(request):
   if request.method == 'POST':
     form = VehicleAddForm(request.POST, request.FILES)
@@ -31,7 +56,6 @@ def addVehicle(request):
     form = VehicleAddForm()
   
   return render(request, 'addVehicle.html', {'form':form})
-  
   
 def addVehicleToDb(request):
   v = Vehicle()
@@ -45,9 +69,7 @@ def addVehicleToDb(request):
   v.save()
   return v.vehicleID
 
-
 def calendarView(request, vehicle_id, addMonths=0):
-  
   d = get_date(request.GET.get('day', None))
   cal = Calendar(d.year, d.month)
   html_cal = cal.formatmonth(vehicle_id, addMonths, withyear=True)
@@ -87,10 +109,30 @@ def addHours(request):
   else:
     form = AddHoursForm()
   return form
-  
-  
-def addCustomer(request):
-  return HttpResponse("Add Customer")
+
 
 def searchVehicle(request):
   return HttpResponse("Search for vehicles")
+
+
+def addReservation(request, vehicle_id):
+  if request.method == 'POST':
+    form = ReservationAddForm(request.POST)
+    if form.is_valid():
+      r = addReservationToDb(request, vehicle_id)
+      return HttpResponseRedirect('/employee/vehicle/' + str(vehicle_id))
+  else:
+    form = ReservationAddForm()
+  return render(request, 'add_reservation.html', {'form':form, 'carId':vehicle_id})
+
+def addReservationToDb(request, vehicle_id):
+  r = Reservation()
+  r.carId = vehicle_id
+  r.userId = request.POST.get('userId')
+  r.startDate = request.POST.get('startDate')
+  r.endDate = request.POST.get('endDate')
+  r.pickupAddress = request.POST.get('endDate')
+  r.needsPickup = False
+  r.hasInsurance = False #request.POST.get('hasInsurance')
+  r.isReturned = True
+  r.save()

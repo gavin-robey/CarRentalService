@@ -1,0 +1,12 @@
+{% extends "employee_base.html" %}
+
+{% block title %}Add Reservation{% endblock %}
+
+{% block content %}
+  Add Reservation for Car with ID {{ carId }}
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+  </form>
+{% endblock %}

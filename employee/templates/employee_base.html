@@ -13,11 +13,11 @@
     <a href="{% url 'login' %}" class="logout-button">Log Out</a>
     
     <p>Hours Worked: {{request.user.profile.hoursWorked}}</p>
-
+    
     <form action="" method="post">
       {% csrf_token %}
       {{ addHoursForm }}
-      <input type="submit" value="Add Hours">
+      <input type="submit" value="Add">
     </form>
   </div>
   

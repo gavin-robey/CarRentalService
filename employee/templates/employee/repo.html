@@ -1,0 +1,35 @@
+{% extends "employee_base.html" %}
+
+{% block title %}Retrieval{% endblock %}
+
+{% block content %}
+  
+  <a href="/employee/" id="switch-to-retail-button">Go To Retail</a>
+
+  <h2>Today's Pickups</h2>
+    {% if todayPickups %}
+      <ul id="pickups-list">
+      {% for pickup in todayPickups %}
+          <li class="pickup-item">
+            Pick up today at {{ pickup.location }} - <a href="/employee/vehicle/{{ pickup.carId }}">{{ pickup.year }} {{ pickup.make }} {{ pickup.model }}</a>
+          </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+        <p>No pickups today.</p>
+    {% endif %}
+    
+  <h2>Future Pickups</h2>
+    {% if futurePickups %}
+      <ul id="pickups-list">
+      {% for pickup in futurePickups %}
+          <li class="pickup-item">
+            {{ pickup.endDate }}: Pick up at {{ pickup.location }} - <a href="/employee/vehicle/{{ pickup.carId }}">{{ pickup.year }} {{ pickup.make }} {{ pickup.model }}</a>
+          </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+        <p>No future pickups.</p>
+    {% endif %}
+    
+{% endblock %}

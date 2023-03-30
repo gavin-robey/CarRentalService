@@ -16,6 +16,8 @@
       <p>No reservations beginning today.</p>
     {% endif %}
     
+    <a href="/employee/addreservation/{{ vehicle.vehicleID }}">Add Reservation</a>
+    
   <h2>All Future Reservations</h2>
     {% if reservations %}
       <ul>
