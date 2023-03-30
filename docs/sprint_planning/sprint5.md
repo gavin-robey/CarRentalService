@@ -25,3 +25,11 @@ Jacob Cheney will be this sprints scrum master
 # List all team members on this document indicate who was not here
 
 Gavin Robey, Jacob Smith, and Jacob Cheney were all present for this sprint. Madison was not present and did not participate at all.
+
+# Stories to work on
+
+- Pay employees based on hours worked and wage
+- Submit hours and save
+- Fully functional manager page, no styling
+- finish unit tests
+- add multiple images per vehicle
