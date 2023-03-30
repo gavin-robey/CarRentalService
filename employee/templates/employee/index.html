@@ -1,18 +1,10 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Employee</title>
-    <link rel="stylesheet" href="{% static 'temp_style.css' %}"/>
-  </head>
-  <body>
-  <h1>Employee Tools</h1>
-  <h2>My Details</h2>
-    <p>Hours Worked: {{request.user.profile.hoursWorked}}</p>
+{% extends "employee_base.html" %}
 
+{% block title %}Retail{% endblock %}
+
+{% block content %}
   <a href="/employee/addvehicle" id="add-vehicle-button">Add Vehicle</a>
-  
+
   <h2>All Vehicles</h2>
     {% if vehicles %}
       <div id="vehicles-list">
@@ -30,5 +22,4 @@
     {% else %}
         <p>No vehicles are available.</p>
     {% endif %}
-  </body>
-</html>
+{% endblock %}

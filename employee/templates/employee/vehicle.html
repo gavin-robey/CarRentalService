@@ -1,13 +1,8 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Vehicle</title>
-    <link rel="stylesheet" href="{% static 'temp_style.css' %}"/>
-  </head>
-  <body>
-  <h3>Today is {{today.today}}</h3>
+{% extends "employee_base.html" %}
+
+{% block title %}{{ vehicle.vehicleMake }} {{ vehicle.vehicleModel }}{% endblock %}
+
+{% block content %}
   <a href="/employee/">&lt;--Employee Home</a>
   <h1>{{ vehicle.vehicleYear }} {{ vehicle.vehicleMake }} {{ vehicle.vehicleModel }}</h1>
     {% if vehicle.vehicleImage %}
@@ -37,6 +32,4 @@
     {{ calendarThis }}
     {{ calendarNext }}
     {{ calendarNextNext}}
-    
-  </body>
-</html>
+{% endblock %}

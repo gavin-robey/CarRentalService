@@ -45,9 +45,17 @@ a:hover, a:focus {
   text-decoration: underline;
 }
 
+.header {
+  display: flex;
+}
+
+.content {
+  margin: 1em 0.5em;
+}
+
 
 .calendar {
-  width: 98%;
+  width: 50em;
   margin: auto;
 }
 

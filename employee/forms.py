@@ -7,3 +7,6 @@ class VehicleAddForm(forms.Form):
   vehicleImage = forms.ImageField(label="Image")
   vehiclePrice = forms.IntegerField(label="Price")
   vehicleIsRetired = forms.BooleanField(label="Retired", required=False)
+
+class AddHoursForm(forms.Form):
+  hoursWorked = forms.IntegerField(label="Hours", max_value=24, min_value=1)

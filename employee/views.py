@@ -2,9 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from .models import Vehicle
-from .forms import VehicleAddForm
+from .forms import *
 from reservation.models import Reservation
 from django.http import HttpResponseRedirect
+from users.models import Profile
 
 from .utils import Calendar
 from datetime import datetime
@@ -14,10 +15,10 @@ from django.utils.safestring import mark_safe
 def index(request):
   vehicles = Vehicle.objects.all()
   template = loader.get_template('employee/index.html')
-  context = {
+  context = { 
     'vehicles': vehicles,
-  }
-  
+    'addHoursForm': addHours(request),
+    }
   return HttpResponse(template.render(context, request))
 
 def addVehicle(request):
@@ -41,18 +42,16 @@ def addVehicleToDb(request):
     v.vehicleImage = request.FILES['vehicleImage']
   v.vehiclePrice = request.POST.get('vehiclePrice')
   v.vehicleIsRetired = request.POST.get('vehicleIsRetired') == 'on'
-  
   v.save()
   return v.vehicleID
-    
-    
+
+
 def calendarView(request, vehicle_id, addMonths=0):
   
   d = get_date(request.GET.get('day', None))
   cal = Calendar(d.year, d.month)
   html_cal = cal.formatmonth(vehicle_id, addMonths, withyear=True)
   return mark_safe(html_cal)
-    
   
 def vehicleDetails(request, vehicle_id):
   template = loader.get_template('employee/vehicle.html')
@@ -78,6 +77,18 @@ def get_date(req_day):
     return date(year, month, day=1)
   return datetime.today()
 
+def addHours(request):
+  if request.method == 'POST':
+    form = AddHoursForm(request.POST)
+    if form.is_valid():
+      p = request.user.profile
+      request.user.profile.hoursWorked += int(request.POST.get('hoursWorked'))
+      p.save()
+  else:
+    form = AddHoursForm()
+  return form
+  
+  
 def addCustomer(request):
   return HttpResponse("Add Customer")
 
