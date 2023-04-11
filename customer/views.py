@@ -7,23 +7,34 @@ from users.models import Profile
 from employee.models import Vehicle
 from django.contrib.auth.models import User
 from datetime import date
+from .utils import Calendar
+from django.utils.safestring import mark_safe
 
 
 def landingPage(request, customer_id):
     customerInfo = {
         "id": customer_id, 
         "vehicleInfo": Vehicle.objects.all,
-        "reservationList":  Reservation.objects.all
+        "reservationList":  Reservation.objects.all,
     }
     return render(request, "customer/index.html", customerInfo)
+
+def buildYear(request, vehicle_id):
+    calendarYear = []
+    for i in range(1,13):
+        calendarYear.append(calendarView(request, vehicle_id, addMonths=i))
+    
+    return calendarYear
 
 
 def vehiclePage(request, customer_id, vehicle_id):
     vehicle = Vehicle.objects.get(vehicleID=vehicle_id)
+    
     vehicleInfo = { 
         "id": customer_id, 
         "vehicleInfo" : vehicle,  
-        "reserved": Reservation.objects.filter(carId=vehicle_id)
+        "reserved": Reservation.objects.filter(carId=vehicle_id),
+        "calendar": buildYear(request, vehicle_id),
     }
     return render(request, "customer/vehicle.html", vehicleInfo)
 
@@ -125,9 +136,27 @@ def cancelBooking(request, customer_id, vehicle_id, reservation_id):
 
 def requestPickup(request, customer_id, vehicle_id, reservation_id):
     reservation = Reservation.objects.get(reservationId=reservation_id)
+    pickUpAddress = request.POST.get('pickUpAddress')
+
+    if len(pickUpAddress) > 0:
+        reservation.pickUpAddress = pickUpAddress
+    
     reservation.needsPickup = True
     reservation.save()
     
     return HttpResponseRedirect(reverse('customer:viewRental', args=(customer_id, 0)))
 
 
+def calendarView(request, vehicle_id, addMonths=0):
+    d = get_date(request.GET.get('day', None))
+    cal = Calendar(d.year, d.month)
+    html_cal = cal.formatmonth(vehicle_id, addMonths, withyear=True)
+    print(html_cal)
+    return mark_safe(html_cal)
+
+
+def get_date(req_day):
+    if req_day:
+        year, month = (int(x) for x in req_day.split('-'))
+        return date(year, month, day=1)
+    return datetime.today()
