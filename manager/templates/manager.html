@@ -1,61 +1,92 @@
-<html>
+<!DOCTYPE html>
+{% load static %} {% load static tailwind_tags %}
+<html lang="en">
   <head>
-    <title>User Information</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manager Page</title>
+    {% tailwind_css %}
   </head>
-  <body>
-    <h1>All Users:</h1>
-    
-    <p><button><a href="{% url 'manager:pay-employees' %}">Pay Employees</a></button> Current wage: $15/hr</p>
-    
 
-    <table>
-        <tr>
-          <th>Username</th>
-          <th>Hours worked</th>
-          <th>Money balance</th>
-        </tr>
+  <body class="bg-secondary text-white-900 flex-col items-center">
+    <section>
+      <div
+        class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
+      >
+        <div
+          class="bg-white rounded-lg shadow dark:border  md:mt-0 dark:bg-gray-800 dark:border-gray-700"
+        >
+          <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <h1
+              class="text-xl font-bold leading-tight tracking-tight text-white-900 md:text-2xl dark:text-white"
+            >
+              Manager Page
+            </h1>
 
-        {% for User in allusers %}
-            <tr>
+            <h1 class="text-lg font-bold leading-tight tracking-tight text-white-900 dark:text-white">User Information:</h1>
+
+            <p>              
+              Current wage: $15/hr
+            </p>
+
+            <button class="bg-purple-900 hover:bg-purple-700 w-52 h-10 mt-5 rounded-md font-semibold">
+              <a href="{% url 'manager:pay-employees' %}">Pay Employees</a>
+            </button>
+
+            <table >
+              <tr>
+                <th style="width: 150px; text-align: left;">Username</th>
+                <th style="width: 150px; text-align: left;">Hours worked</th>
+                <th style="width: 150px; text-align: left;">Money balance</th>
+              </tr>
+
+              {% for User in allusers %}
+              <tr>
                 <td>{{ User}}</td>
                 <td>{{ User.profile.hoursWorked}}</td>
                 <td>{{ User.profile.moneyBalance}}</td>
-            </tr>                        
-        {% endfor %}
+              </tr>
+              {% endfor %}
+            </table>
 
-        
-      </table>
+            <h1 class="text-lg font-bold leading-tight tracking-tight text-white-900 dark:text-white">Vehicle Information:</h1>
 
-      <h1>All Vehicles:</h1>
-      <button><a href="{% url 'manager:create-vehicle' %}">Create New Vehicle</a></button>
-      <br>
-      <br>
-  
+            <button class="bg-purple-900 hover:bg-purple-700 w-52 h-10 mt-5 rounded-md font-semibold">
+              <a href="{% url 'manager:create-vehicle' %}"
+                >Create New Vehicle</a
+              >
+            </button>           
 
-    <table>
-        <tr>
-          <th>Vehicle</th>
-          <th>Year</th>
-          <th>Renting Price</th>    
-          <th>Is retired?</th>      
-          <th>Update</th>
-        </tr>
+            <table class="table-fixed">
+              <tr>
+                <th style="width: 250px; text-align: left;">Vehicle</th>
+                <th style="width: 100px; text-align: left;">Year</th>
+                <th style="width: 100px; text-align: left;">Renting Price</th>
+                <th style="width: 100px; text-align: left;">Is retired?</th>
+                <th style="width: 200px; text-align: left;">Update</th>
+              </tr>
 
-        {% for Vehicle in allvehicles %}
-            <tr>
+              {% for Vehicle in allvehicles %}
+              <tr>
                 <td>{{ Vehicle.vehicleMake}} {{ Vehicle.vehicleModel}}</td>
                 <td>{{ Vehicle.vehicleYear}}</td>
-                <td> ${{ Vehicle.vehiclePrice}}</td>
-                <td> {{ Vehicle.vehicleIsRetired}}</td>              
-                <td><a href="{% url 'manager:update-vehicle' Vehicle.vehicleID %}">Click to update</a></td>
-                
-            </tr>
-                                    
-        {% endfor %}
-        
-      </table> 
+                <td>${{ Vehicle.vehiclePrice}}</td>
+                <td>{{ Vehicle.vehicleIsRetired}}</td>
+                <td>
+                  <a href="{% url 'manager:update-vehicle' Vehicle.vehicleID %}"
+                    >Click to update</a
+                  >
+                </td>
+              </tr>
 
-      
-    
+              {% endfor %}
+            </table>
+
+            
+          </div>
+        </div>
+      </div>
+    </section>
   </body>
 </html>
