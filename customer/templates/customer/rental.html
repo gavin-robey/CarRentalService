@@ -15,23 +15,25 @@
             <span class="font-semibold text-xl tracking-tight">Your Rentals</span>
         </div>    
         <div class="static">
-            <img src="{% static 'customer/Images/profile.png' %}" width="40" height="40" class="hover:scale-125 transition-all duration-500" onclick="display(event)"/>
+            <img src="{% static 'customer/Images/profile.png' %}" width="40" height="40" class="hover:scale-125 transition-all duration-500" onclick="display('profileMenu')"/>
         </div>
     </nav>
 
-    <div class="w-full h-full bg-black opacity-50 absolute" id="background" style="visibility: hidden;" onclick="remove(event)"></div>
+    <div class="fixed top-0 w-full h-full bg-black opacity-50" id="background" style="visibility: hidden;" onclick="remove(event)"></div>
     <div class="bg-primary absolute right-5 mt-5 p-5 text-white rounded-md" id="profileMenu" style="visibility: hidden">
         <p class="text-xl">Your Balance: <span class="float-right font-bold">${{request.user.profile.moneyBalance}}</span></p>
         <div class="flex flex-col items-center justify-center" >
-            <button class="bg-purple-900 w-52 h-10 mt-5 rounded-md font-semibold">Add To Account</button>
-            <a class="bg-purple-900 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold"  href="{% url 'customer:viewRental' request.user.profile.id 0 %}">View Rentals</a>
-            <a class="bg-purple-900 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold" href="{% url 'login' %}">Log Out</a>
+            <button class="bg-purple-900 hover:bg-purple-700 w-52 h-10 mt-5 rounded-md font-semibold">Add To Account</button>
+            <a class="bg-purple-900 hover:bg-purple-700 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold"  href="{% url 'customer:viewRental' request.user.profile.id 0 %}">View Rentals</a>
+            <a class="bg-purple-900 hover:bg-purple-700 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold" href="{% url 'login' %}">Log Out</a>
         </div>
     </div>
 
-    <p>Active Reservations </p>
+    <div class="flex justify-center">
+        <h2 class="text-4xl font-semibold mt-20 ">Active Reservations </h2>
+    </div>
     {% for rental, reservation in activeReservations %}
-        <div class="flex justify-center mt-20 ">
+        <div class="flex justify-center mt-10 ">
             <div class="flex md:flex-row flex-col bg-primary rounded-md p-5">
                 <div class="basis-full">
                     <img src="{{rental.vehicleImage.url}}" class="sm:w-auto w-[26rem] sm:h-96 rounded-md">
@@ -44,18 +46,39 @@
             </div>
         </div> 
 
-        <div class="flex justify-center mb-10">
+        <div class="flex justify-center mb-14">
             <div class="bg-primary md:w-[60rem] sm:w-[45rem] w-[26rem] mt-5 rounded-md">
                 <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{rental.vehicleYear}} <span>{{rental.vehicleMake}}</span> <span>{{rental.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
                 <p class="ml-5 mt-2 sm:text-base text-sm"> ${{rental.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
                 <h2 class="mb-5 ml-5 mt-2">Your booking dates: {{reservation.startDate}}-{{reservation.endDate}}</h2>
+                <button onclick="display('confirmAddress')" class="float-right mb-5 mr-5 bg-purple-900 w-52 h-10 rounded-md font-semibold hover:bg-purple-700">Request Maintenance</button>
+
+                <!-- popup for to request pickup -->
+                <div class="flex justify-center fixed top-0 left-1/2">
+                    <div class="fixed top-1/3 md:w-[30rem] w-96 bg-primary rounded-md p-5" id="confirmAddress" style="visibility: hidden;">
+                        <p class="text-lg font-semibold">Your Vehicle Will Be Picked Up And Serviced</p>
+                        <br>
+                        <br>
+                        <p>Please Enter The Current Location Of The Vehicle</p>
+                        <form action="{% url 'customer:requestPickup' request.user.profile.id 0 reservation.reservationId %}" method="post">
+                            {% csrf_token %}
+                            <div class="flex justify-center">
+                                <input placeholder="If Blank Original Location Will Be Used" class=" mt-5 w-full rounded-md border-transparent bg-secondary border-2 focus:ring-purple-900 focus:border-purple-900 focus:ring-1" type="text" name="pickUpAddress" id="pickUpAddress" onchange="cal()">
+                            </div>
+                            <input type="submit" name="requestMaintenance" id="requestMaintenance" value="Request Maintenance" class="float-right mt-10 bg-purple-900 w-52 h-10 hover:bg-purple-700 rounded-md flex flex-col items-center disabled:bg-gray-900 disabled:text-gray-700 justify-center font-semibold">
+                        </form>
+                    </div>
+                </div>
+
             </div>
         </div>
     {% endfor %}    
 
-    <p>Future Reservations</p>
+    <div class="flex justify-center">
+        <h2 class="text-4xl font-semibold mt-6 ">Future Reservations</h2>
+    </div>
     {% for rental, reservation in futureReservations %}
-        <div class="flex justify-center mt-20 ">
+        <div class="flex justify-center mt-10 ">
             <div class="flex md:flex-row flex-col bg-primary rounded-md p-5">
                 <div class="basis-full">
                     <img src="{{rental.vehicleImage.url}}" class="sm:w-auto w-[26rem] sm:h-96 rounded-md">
@@ -68,18 +91,34 @@
             </div>
         </div> 
 
-        <div class="flex justify-center mb-10">
+        <div class="flex justify-center mb-14">
             <div class="bg-primary md:w-[60rem] sm:w-[45rem] w-[26rem] mt-5 rounded-md">
                 <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{rental.vehicleYear}} <span>{{rental.vehicleMake}}</span> <span>{{rental.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
                 <p class="ml-5 mt-2 sm:text-base text-sm"> ${{rental.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
                 <h2 class="mb-5 ml-5 mt-2">Your booking dates: {{reservation.startDate}}-{{reservation.endDate}}</h2>
+                <button onclick="display('cancel')" class="float-right mb-5 mr-5 bg-purple-900 w-52 h-10 rounded-md font-semibold hover:bg-purple-700">Cancel Booking</button>
+
+                <!-- popup for to confirm cancellation -->
+                <div class="flex justify-center fixed top-0 left-1/2">
+                    <div class="fixed top-1/3 md:w-[30rem] w-96 bg-primary rounded-md p-5" id="cancel" style="visibility: hidden;">
+                        <p class="text-lg">Are You Sure You Want To Cancel This Booking</p>
+                        <p class="text-sm text-gray-400">Your Order Will Not Be Refunded</p>
+                        <form action="{% url 'customer:cancelBooking' request.user.profile.id 0 reservation.reservationId %}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" name="cancel" id="cancel" value="Yes" class="float-right mt-10 bg-purple-900 w-52 h-10 hover:bg-purple-700 rounded-md flex flex-col items-center disabled:bg-gray-900 disabled:text-gray-700 justify-center font-semibold">
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     {% endfor %}
 
-    <p>Past Reservations</p>
+
+    <div class="flex justify-center">
+        <h2 class="text-4xl font-semibold mt-6 ">Past Reservations</h2>
+    </div>
     {% for rental, reservation in pastReservations %}
-        <div class="flex justify-center mt-20 ">
+        <div class="flex justify-center mt-10">
             <div class="flex md:flex-row flex-col bg-primary rounded-md p-5">
                 <div class="basis-full">
                     <img src="{{rental.vehicleImage.url}}" class="sm:w-auto w-[26rem] sm:h-96 rounded-md">
@@ -92,7 +131,7 @@
             </div>
         </div> 
 
-        <div class="flex justify-center mb-10">
+        <div class="flex justify-center mb-14">
             <div class="bg-primary md:w-[60rem] sm:w-[45rem] w-[26rem] mt-5 rounded-md">
                 <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{rental.vehicleYear}} <span>{{rental.vehicleMake}}</span> <span>{{rental.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
                 <p class="ml-5 mt-2 sm:text-base text-sm"> ${{rental.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
@@ -102,11 +141,13 @@
     {% endfor %}
 
     <script>
-        var profileMenu = document.getElementById('profileMenu')
-        var background = document.getElementById('background')
+        var profileMenu = document.getElementById('profileMenu');
+        var background = document.getElementById('background');
+        var cancelPopup = document.getElementById('cancel');
+        var confirmAddress = document.getElementById('confirmAddress');
 
-        function display(event){
-            profileMenu.style.visibility = 'visible';
+        function display(itemId){
+            document.getElementById(itemId).style.visibility = 'visible';
             background.style.visibility = 'visible';
             disableScroll();
         }
@@ -114,6 +155,8 @@
         function remove(event){
             event.currentTarget.style.visibility = "hidden";
             profileMenu.style.visibility = "hidden";
+            cancelPopup.style.visibility = "hidden";
+            confirmAddress.style.visibility = "hidden";
             enableScroll();
         }
 

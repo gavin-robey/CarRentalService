@@ -6,9 +6,19 @@ from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from .forms import UserRegistrationForm
 
-# Now redirects to the customer page with the id as the url payload
+
+# Ensures a user is authenticated before checking the role of the user
 def home(request):
-    return HttpResponseRedirect(reverse('customer:landingPage', args=(request.user.profile.id,)))
+    if request.user.is_authenticated:
+        if request.user.profile.role == "user":
+            return HttpResponseRedirect(reverse('customer:landingPage', args=(request.user.profile.id,)))
+        elif request.user.profile.role == "employee":
+            return HttpResponseRedirect(reverse("employee:index"))
+        else:
+            return HttpResponseRedirect(reverse("manager:manager"))
+    else:
+        return HttpResponseRedirect(reverse('login'))
+
 
 def register(request):
     if request.method == 'POST':

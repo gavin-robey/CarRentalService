@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{id}}</title>
+    <title>Dan's Rental</title>
     {% tailwind_css %}
 </head>
 <body class="bg-secondary text-white-900">
@@ -20,14 +20,14 @@
         </div>
     </nav>
 
-    <div class="w-full h-full bg-black opacity-50 absolute" id="background" style="visibility: hidden;" onclick="remove(event)"></div>
+    <div class="w-full h-full bg-black opacity-50 absolute" id="background" style="visibility: hidden;" onclick="remove()"></div>
 
     <div class="bg-primary absolute right-5 mt-5 p-5 text-white rounded-md" id="profileMenu" style="visibility: hidden">
         <p class="text-xl">Your Balance: <span class="float-right font-bold">${{request.user.profile.moneyBalance}}</span></p>
         <div class="flex flex-col items-center justify-center" >
-            <button class="bg-purple-900 w-52 h-10 mt-5 rounded-md font-semibold">Add To Account</button>
-            <a class="bg-purple-900 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold"  href="{% url 'customer:viewRental' request.user.profile.id 0 %}">View Rentals</a>
-            <a class="bg-purple-900 w-52 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold" href="{% url 'login' %}">Log Out</a>
+            <button class="bg-purple-900 hover:bg-purple-700 w-52 h-10 mt-5 rounded-md font-semibold" onclick="enablePaymentForm()">Add To Account</button>
+            <a class="bg-purple-900 w-52 hover:bg-purple-700 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold"  href="{% url 'customer:viewRental' request.user.profile.id 0 %}">View Rentals</a>
+            <a class="bg-purple-900 w-52 hover:bg-purple-700 h-10 mt-5 rounded-md flex flex-col items-center justify-center font-semibold" href="{% url 'login' %}">Log Out</a>
         </div>
     </div>
 
@@ -49,9 +49,59 @@
         {% endfor %} 
     </div> 
 
+    <div class="flex justify-center" style="visibility: hidden;" id="paymentForm">
+        <div class="fixed top-36 sm:w-[40rem] md:w-[50rem] w-96 bg-secondary rounded-md p-5">
+            <span class="flex items-center float-right bg-red-700 text-red-900 hover:bg-red-300 hover:text-red-500 pl-3 pr-3 pt-1 pb-1.5 rounded-full font-semibold" onclick="remove()">X</span>
+            <div class="flex justify-center">
+                <p class="font-semibold text-lg">Add To Balance</p>
+            </div>
+            <label class="relative w-full flex flex-col mt-5">
+                <span class="font-bold mb-3">Card number</span>
+                <input onchange="updateAddPaymentButton()" id="cardInput" class="focus:ring-purple-900 focus:border-purple-900 focus:ring-1 rounded-md peer pl-12 pr-2 py-2 border-2 border-transparent placeholder-gray-700 bg-primary" type="text" name="card_number" placeholder="0000 0000 0000" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute bottom-0 left-0 -mb-0.5 transform translate-x-1/2 -translate-y-1/2 text-white-900 peer-placeholder-shown:text-gray-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+            </label>
+            
+            <label class="relative flex-1 flex flex-col mt-5">
+                <span class="font-bold mb-3">Expiration date</span>
+                <input onchange="updateAddPaymentButton()" id="expirationInput" class="focus:ring-purple-900 focus:border-purple-900 focus:ring-1 rounded-md peer pl-12 pr-2 py-2 border-2 border-transparent placeholder-gray-700 bg-primary" type="text" name="expire_date" placeholder="MM/YY" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute bottom-0 left-0 -mb-0.5 transform translate-x-1/2 -translate-y-1/2 text-white-900 peer-placeholder-shown:text-gray-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </label>
+            
+            <label class="relative flex-1 flex flex-col mt-5">
+                <span class="font-bold flex items-center gap-3 mb-3">
+                    CVC/CVV
+                    <span class="relative group">
+                    <span class="hidden group-hover:flex justify-center items-center px-2 py-1 text-xs absolute -right-2 transform translate-x-full -translate-y-1/2 w-max top-1/2 bg-orange-900 rounded-md text-gray-900"> Enter The Three Numbers On The Back</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    </span>
+                </span>
+                <input onchange="updateAddPaymentButton()" id="cvvInput" class="focus:ring-purple-900 focus:border-purple-900 focus:ring-1 rounded-md peer pl-12 pr-2 py-2 border-2 border-transparent placeholder-gray-700 bg-primary" type="text" name="card_cvc" placeholder="&bull;&bull;&bull;" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute bottom-0 left-0 -mb-0.5 transform translate-x-1/2 -translate-y-1/2 text-white-900 peer-placeholder-shown:text-gray-700 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </label>
+            <form action="{% url 'customer:addBalanceHome' id %}" method="post">
+                {% csrf_token %}
+                <p class="mt-5 font-semibold">Enter Amount</p>
+                <div class="flex flex-row mt-3 items-center">
+                    <p class="mr-5">$</p>
+                    <input onchange="updateAddPaymentButton()" min="0" oninput="this.value = Math.abs(this.value)" placeholder="0" id="amountInput" type="number" name="add" class="border-2 focus:ring-purple-900 focus:border-purple-900 focus:ring-1 bg-primary rounded-md border-transparent w-full">
+                </div>
+                <input type="submit" id="addBalance" value="Add Balance" class="float-right mt-10 bg-purple-900 w-52 h-10 hover:bg-purple-700 rounded-md flex flex-col items-center disabled:bg-gray-900 disabled:text-gray-700 justify-center font-semibold">
+            </form>
+        </div>
+    </div>
+
     <script type="text/javascript">
         var profileMenu = document.getElementById('profileMenu')
         var background = document.getElementById('background')
+        document.getElementById('addBalance').disabled = true;
 
         function display(event){
             profileMenu.style.visibility = 'visible';
@@ -59,9 +109,10 @@
             disableScroll();
         }
 
-        function remove(event){
-            event.currentTarget.style.visibility = "hidden";
+        function remove(){
+            background.style.visibility = "hidden";
             profileMenu.style.visibility = "hidden";
+            document.getElementById("paymentForm").style.visibility = "hidden";
             enableScroll();
         }
 
@@ -91,6 +142,34 @@
          */
         function preventDefault(e) {
             e.preventDefault();
+        }
+
+        // Enables the add payment button when all conditions are met
+        function updateAddPaymentButton(){
+            if(checkPayment()){
+                document.getElementById('addBalance').disabled = false;
+            }else{
+                document.getElementById('addBalance').disabled = true;
+            }
+        }
+
+        // All forms for payment pop up must be filled in
+        function checkPayment(){
+            let cardInput = document.getElementById("cardInput").value;
+            let expirationInput = document.getElementById("expirationInput").value;
+            let cvvInput = document.getElementById("cvvInput").value;
+            let amountInput = document.getElementById("amountInput").value;
+            
+            if(cardInput == "" || cvvInput == "" || amountInput == "" || expirationInput == ""){
+                return false;
+            }else{
+                return true;
+            }
+        }
+
+        function enablePaymentForm(){
+            document.getElementById("profileMenu").style.visibility = "hidden";
+            document.getElementById("paymentForm").style.visibility = "visible";
         }
     </script>
 
