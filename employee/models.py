@@ -7,6 +7,10 @@ class Vehicle(models.Model):
   vehicleMake = models.CharField(max_length=64)
   vehicleModel = models.CharField(max_length=64)
   vehicleImage = models.ImageField(upload_to='vehicles') # Requires Pillow
+  vehicleImage2 = models.ImageField(upload_to='vehicles', blank=True)
+  vehicleImage3 = models.ImageField(upload_to='vehicles', blank=True)
+  vehicleImage4 = models.ImageField(upload_to='vehicles', blank=True)
+
   vehiclePrice = models.IntegerField()
   vehicleIsRetired = models.BooleanField(default=False)
   
