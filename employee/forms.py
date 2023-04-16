@@ -4,7 +4,10 @@ class VehicleAddForm(forms.Form):
   vehicleYear = forms.IntegerField(label="Year", max_value=2023, min_value=1900)
   vehicleMake = forms.CharField(label="Make", max_length=64)
   vehicleModel = forms.CharField(label="Model", max_length=64)
-  vehicleImage = forms.ImageField(label="Image")
+  vehicleImage = forms.ImageField(label="Image 1")
+  vehicleImage2 = forms.ImageField(label="Image 2")
+  vehicleImage3 = forms.ImageField(label="Image 3")
+  vehicleImage4 = forms.ImageField(label="Image 4")
   vehiclePrice = forms.IntegerField(label="Price")
   vehicleIsRetired = forms.BooleanField(label="Retired", required=False)
   
