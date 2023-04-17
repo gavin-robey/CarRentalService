@@ -210,7 +210,3 @@ python3 manage.py test users
 ## System Testing Instructions
 
 Once the app is built, the system can be tested by visiting http://127.0.0.1:8000/ in a browser. Login to the web app using the following credentials. Username: SystemTest, Password: systest. This login will allow access to all actions as a customer, till employee, manager, and retrieval specialist in a test environment. This feature is not built yet, but once the project is implemented it will become available.
-
-## Other development notes, as needed
-
-Development notes will be added as development continues.
