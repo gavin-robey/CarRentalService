@@ -16,6 +16,10 @@ Standup Reports can be found in "docs/standup_reports"
 
 Sprint Retrospectives can be found in "docs/sprint_retrospective"
 
+Demo Videos can be found in "docs/4 screen capture video"
+
+Presentaion can be found in "docs/Presentation slides"
+
 ## Version-control procedures
 
 Each collaborator will fork and clone this repository to their own _github_ account. Whenever changes must be made to the repository, each collaborator will send a pull request to ensure any issues are montitored and controlled.
@@ -209,4 +213,4 @@ python3 manage.py test users
 
 ## System Testing Instructions
 
-Once the app is built, the system can be tested by visiting http://127.0.0.1:8000/ in a browser. Login to the web app using the following credentials. Username: SystemTest, Password: systest. This login will allow access to all actions as a customer, till employee, manager, and retrieval specialist in a test environment. This feature is not built yet, but once the project is implemented it will become available.
+Once the app is built, the system can be tested by visiting http://127.0.0.1:8000/ in a browser. Login to the web app using the following credentials. Username: manager, Password: systest. This login will allow access to all actions as a customer, till employee, manager, and retrieval specialist in a test environment.
