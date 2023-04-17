@@ -48,8 +48,8 @@
 
         <div class="flex justify-center mb-14">
             <div class="bg-primary md:w-[60rem] sm:w-[45rem] w-[26rem] mt-5 rounded-md">
-                <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{rental.vehicleYear}} <span>{{rental.vehicleMake}}</span> <span>{{rental.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
-                <p class="ml-5 mt-2 sm:text-base text-sm"> ${{rental.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
+                <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{rental.vehicleYear}} <span>{{rental.vehicleMake}}</span> <span>{{rental.vehicleModel}}</span></span></p>
+                <p class="ml-5 mt-2 sm:text-base text-sm"> ${{rental.vehiclePrice}} / Day </p>
                 <h2 class="mb-5 ml-5 mt-2">Your booking dates: {{reservation.startDate}}-{{reservation.endDate}}</h2>
                 <button onclick="display('confirmAddress')" class="float-right mb-5 mr-5 bg-purple-900 w-52 h-10 rounded-md font-semibold hover:bg-purple-700">Request Maintenance</button>
 
@@ -85,7 +85,7 @@
                 </div>
                 <div class="w-full basis-1/4 flex md:flex-col flex-row justify-center md:mt-0 mt-10">
                     <img src="{{rental.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-14 mr-4">
-                    <img src="{{rental.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-12 mr-4">
+                    <img src="{{rental.vehicleImage2.url}}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-12 mr-4">
                     <img src="{{rental.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md hover:scale-110 transition-all ">
                 </div>
             </div>
@@ -93,8 +93,8 @@
 
         <div class="flex justify-center mb-14">
             <div class="bg-primary md:w-[60rem] sm:w-[45rem] w-[26rem] mt-5 rounded-md">
-                <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{rental.vehicleYear}} <span>{{rental.vehicleMake}}</span> <span>{{rental.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
-                <p class="ml-5 mt-2 sm:text-base text-sm"> ${{rental.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
+                <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{rental.vehicleYear}} <span>{{rental.vehicleMake}}</span> <span>{{rental.vehicleModel}}</span></span></p>
+                <p class="ml-5 mt-2 sm:text-base text-sm"> ${{rental.vehiclePrice}} / Day</p>
                 <h2 class="mb-5 ml-5 mt-2">Your booking dates: {{reservation.startDate}}-{{reservation.endDate}}</h2>
                 <button onclick="display('cancel')" class="float-right mb-5 mr-5 bg-purple-900 w-52 h-10 rounded-md font-semibold hover:bg-purple-700">Cancel Booking</button>
 
@@ -133,8 +133,8 @@
 
         <div class="flex justify-center mb-14">
             <div class="bg-primary md:w-[60rem] sm:w-[45rem] w-[26rem] mt-5 rounded-md">
-                <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{rental.vehicleYear}} <span>{{rental.vehicleMake}}</span> <span>{{rental.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
-                <p class="ml-5 mt-2 sm:text-base text-sm"> ${{rental.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
+                <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{rental.vehicleYear}} <span>{{rental.vehicleMake}}</span> <span>{{rental.vehicleModel}}</span></span></p>
+                <p class="ml-5 mt-2 sm:text-base text-sm"> ${{rental.vehiclePrice}} / Day </p>
                 <h2 class="mb-5 ml-5 mt-2">Your booking dates: {{reservation.startDate}}-{{reservation.endDate}}</h2>
             </div>
         </div>

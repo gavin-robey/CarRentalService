@@ -84,60 +84,6 @@
         </div>
     </div>
     
-    <!-- Vehicle Images Formatting and html  -->
-    <div class="flex justify-center mt-10">
-        <div class="flex md:flex-row flex-col">
-            <div class="basis-full">
-                <img src="{{vehicleInfo.vehicleImage.url}}" class="sm:w-auto w-[26rem] sm:h-96 rounded-md">
-            </div>
-            <div class="w-full basis-1/4 flex md:flex-col flex-row justify-center md:mt-0 mt-10">
-                <img src="{{vehicleInfo.vehicleImage2.url}}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-14 mr-4">
-                <img src="{{vehicleInfo.vehicleImage3.url}}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-12 mr-4">
-                <img src="{{vehicleInfo.vehicleImage4.url}}" class="sm:w-48 md:w-60 w-32 rounded-md hover:scale-110 transition-all ">
-            </div>
-        </div>
-    </div> 
-
-    <!-- Form Section -->
-    <div class="flex justify-center mb-10">
-        <div class="bg-primary md:w-[57.5rem] sm:w-[42.5rem] w-[26rem] mt-10 rounded-md">
-            <p class="ml-5 mt-4 sm:text-lg text-base"><span class="sm:text-xl text-base font-semibold">{{vehicleInfo.vehicleYear}} <span>{{vehicleInfo.vehicleMake}}</span> <span>{{vehicleInfo.vehicleModel}}</span></span><span class="float-right mr-5 text-base">Selected Days <span id="numdays">0</span></span></p>
-            <p class="ml-5 mt-2 sm:text-base text-sm"> ${{vehicleInfo.vehiclePrice}} / Day <span class="float-right mr-5">Total Cost: $<span id="totalCost">0</span></span></p>
-
-            <form action="{% url 'customer:submitRental' id vehicleInfo.vehicleID %}" method="post">
-                {% csrf_token %}
-                <div>
-                    <div class="mt-10 ml-5">
-                        <p>Select Rental Dates</p>
-                    </div>
-                    <div class="flex flex-row justify-center items-center mt-2">
-                        <input class=" peer block min-h-[auto] w-1/2 ml-5 rounded border-transparent bg-secondary border-2 focus:ring-purple-900 focus:border-purple-900 focus:ring-5 text-gray-700" type="date" name="startDate" id="startDate" min="" required onchange="cal()" >
-                        <p class="ml-5 mr-5 font-semibold">To</p>
-                        <input class=" peer block min-h-[auto] w-1/2 mr-5 rounded border-transparent bg-secondary border-2 focus:ring-purple-900 focus:border-purple-900 focus:ring-1 text-gray-700" type="date" name="endDate" id="endDate"  min="" required onchange="cal()">
-                    </div>
-                    <div class="flex flex-row items-center h-5 mt-2">
-                        <p class="w-1/2 ml-5 sm:text-base text-xs text-red-500 font-semibold" style="visibility: hidden;" id="leftError">Must Enter A Current Date</p>
-                        <p class="ml-5 mr-5 hidden">&nbsp; &nbsp; &nbsp;</p>
-                        <p class="w-1/2 mr-5 sm:text-base text-xs text-red-500 font-semibold" style="visibility: hidden;" id="rightError">Must Enter A Current Date</p>
-                    </div>
-                    <div class="mt-3 ml-5">
-                        <p>Enter Pick Up Address</p>
-                    </div>
-                    <div class="flex justify-center">
-                        <input class=" mt-2 w-full ml-5 mr-5 rounded-md border-transparent bg-secondary border-2 focus:ring-purple-900 focus:border-purple-900 focus:ring-1" type="text" name="pickUpAddress" id="pickUpAddress" onchange="cal()">
-                    </div>
-                    <input class="h-10" type="number" name="totalCost" onchange="cal()" id="totalCostField" style="visibility: hidden;">
-                    <div class="flex flex-row items-center ml-5">
-                        <span><p>Add Insurance For An Additional $25?</p></span>
-                        <input type="checkbox" name="hasInsurance" id="hasInsurance" class="ml-5 rounded-full" onchange="addInsurance(this)">
-                    </div>
-                    <div class="p-5 float-right">
-                        <input type="submit" value="Book Rental" id="submit" class=" bg-purple-900 w-52 h-10 hover:bg-purple-700 rounded-md flex flex-col items-center disabled:bg-gray-900 disabled:text-gray-700 justify-center font-semibold">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
 
 
     <!-- popup for when dates are booked -->
@@ -206,8 +152,8 @@
             </div>
             <div class="w-full basis-1/4 flex md:flex-col flex-row justify-center md:mt-0 mt-10">
                 <img onclick="toggleImage(this)" src="{{vehicleInfo.vehicleImage.url}}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-14 mr-4">
-                <img onclick="toggleImage(this)" src="{% static 'customer/Images/test.jpg' %}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-12 mr-4">
-                <img onclick="toggleImage(this)" src="{% static 'customer/Images/test2.webp' %}" class="sm:w-48 md:w-60 w-32 rounded-md hover:scale-110 transition-all ">
+                <img onclick="toggleImage(this)" src="{{vehicleInfo.vehicleImage2.url}}" class="sm:w-48 md:w-60 w-32 rounded-md md:mb-9 hover:scale-110 transition-all md:mr-0 sm:mr-12 mr-4">
+                <img onclick="toggleImage(this)" src="{{vehicleInfo.vehicleImage3.url}}" class="sm:w-48 md:w-60 w-32 rounded-md hover:scale-110 transition-all ">
             </div>
         </div>
     </div> 
