@@ -93,6 +93,12 @@ def vehicleDetails(request, vehicle_id):
 
   return HttpResponse(template.render(context, request))
 
+def customerDetails(request, customer_id):
+  template = loader.get_template('employee/customer.html')
+  context = {}
+  context['user'] = Profile.objects.filter(user_id=customer_id)
+  return HttpResponse(template.render(context, request))
+
 def get_date(req_day):
   if req_day:
     year, month = (int(x) for x in req_day.split('-'))
